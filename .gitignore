@@ -7,6 +7,7 @@ tmp/
 *~.nib
 local.properties
 .settings/
+.idea/
 .loadpath
 
 # Eclipse Core
@@ -48,3 +49,6 @@ target
 
 # Code Recommenders
 .recommenders/
+
+#IDEA
+*.iml
