@@ -1,4 +1,6 @@
 #!/bin/bash
+BIGFUN_HOME=/home/parshimers/Work/UCI/bigFUN
+
 
 if [ -z $BIGFUN_HOME ]
 then 

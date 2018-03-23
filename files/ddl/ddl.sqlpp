@@ -1,0 +1,62 @@
+DROP DATAVERSE bigfun IF EXISTS;
+CREATE DATAVERSE bigfun;
+USE bigfun;
+
+CREATE TYPE EmploymentType AS {
+    organization: string,
+    start_date: date,
+    end_date: date?
+};
+
+CREATE TYPE GleambookUserType AS {
+    id: bigint,
+    alias: string,
+    name: string,
+    user_since: datetime,
+    friend_ids: {{ bigint }},
+    employment: [EmploymentType]
+};
+
+CREATE TYPE GleambookMessageType AS {
+    message_id: bigint,
+    author_id: bigint,
+    in_response_to: bigint?,
+    sender_location: point,
+    send_time: datetime,
+    message: string
+};
+
+CREATE TYPE ChirpUserType AS {
+    screen_name: string,
+    lang: string,
+    friends_count: int,
+    statuses_count: int,
+    name: string,
+    followers_count: int
+};
+
+CREATE TYPE ChirpMessageType AS {
+    chirpid: bigint,
+    user: ChirpUserType,
+    sender_location: point,
+    send_time: datetime,
+    referred_topics: {{ string }},
+    message_text: string
+};
+
+
+CREATE DATASET ChirpMessages(ChirpMessageType)
+PRIMARY KEY chirpid;
+
+CREATE DATASET GleambookUsers(GleambookUserType)
+PRIMARY KEY id;
+
+CREATE DATASET GleambookMessages(GleambookMessageType)
+PRIMARY KEY message_id;
+
+
+CREATE INDEX usrSinceIx ON GleambookUsers(user_since);
+CREATE INDEX authorIdIx ON GleambookMessages(author_id);
+CREATE INDEX sndTimeIx ON ChirpMessages(send_time);
+CREATE INDEX sendLocIx ON ChirpMessages(sender_location) TYPE rtree;
+CREATE INDEX msgNGramIdx ON ChirpMessages(message_text) TYPE ngram(2);

@@ -14,16 +14,37 @@
  */
 package asterixReadOnlyClient;
 
+import java.io.StringWriter;
+import java.lang.reflect.Parameter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-
+import org.apache.commons.io.IOUtils;
 import client.AbstractReadOnlyClientUtility;
 import config.Constants;
 
@@ -45,7 +66,8 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
         httpclient = new DefaultHttpClient();
         httpGet = new HttpGet();
         try {
-            roBuilder = new URIBuilder("http://" + ccUrl + ":" + Constants.ASTX_AQL_REST_API_PORT + "/query");
+            roBuilder = new URIBuilder("http://" + ccUrl + ":" + Constants
+                    .ASTX_AQL_REST_API_PORT + "/query/service");
         } catch (URISyntaxException e) {
             System.err.println("Problem in initializing Read-Only URI Builder");
             e.printStackTrace();
@@ -62,18 +84,35 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
 
     @Override
     public void executeQuery(int qid, int vid, String qBody) {
-        String content = null;
         long rspTime = Constants.INVALID_TIME;
+        String result = "";
         try {
             roBuilder.setParameter("query", qBody);
             URI uri = roBuilder.build();
             httpGet.setURI(uri);
 
             long s = System.currentTimeMillis();
-            HttpResponse response = httpclient.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-            content = EntityUtils.toString(entity);
-            EntityUtils.consume(entity);
+
+            RequestBuilder builder = RequestBuilder.post(uri);
+            ObjectMapper om = new ObjectMapper();
+            ObjectNode content = om.createObjectNode();
+                content.put("statement", qBody);
+            try {
+                builder.setEntity(
+                        new StringEntity(om.writeValueAsString(content),
+                                ContentType.APPLICATION_JSON));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            builder.setCharset(StandardCharsets.UTF_8);
+            HttpUriRequest method = builder.build();
+            // Set accepted output response type
+            method.setHeader("Accept", "application/json");
+            HttpResponse response = executeHttpRequest(method);
+            StringWriter resultWriter = new StringWriter();
+            IOUtils.copy(response.getEntity().getContent(),resultWriter,StandardCharsets
+                    .UTF_8);
+            result = resultWriter.toString();
             long e = System.currentTimeMillis();
 
             rspTime = (e - s);
@@ -90,10 +129,34 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             resPw.println("Ver " + vid);
             resPw.println(qBody + "\n");
             if (dumpResults) {
-                resPw.println(content + "\n");
+                resPw.println(result);
             }
         }
         System.out.println("Q" + qid + " version " + vid + "\t" + rspTime); //trace the progress
 
+    }
+
+    protected HttpResponse executeHttpRequest(HttpUriRequest method)
+            throws Exception {
+        // https://issues.apache.org/jira/browse/ASTERIXDB-2315
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        CloseableHttpClient client = HttpClients.custom()
+                .setRetryHandler(StandardHttpRequestRetryHandler.INSTANCE)
+                .build();
+        Future<HttpResponse> future = executor.submit(() -> {
+            try {
+                return client.execute(method, (HttpContext) null);
+            } catch (Exception e) {
+                throw e;
+            }
+        });
+        try {
+            return future.get();
+        } catch (Exception e) {
+            client.close();
+            throw e;
+        } finally {
+            executor.shutdownNow();
+        }
     }
 }

@@ -20,5 +20,5 @@ public interface IArgument {
 
     public String dump();
 
-    public String admPrint();
+    public String toJSON();
 }

@@ -36,7 +36,7 @@ public class StringArgument implements IArgument {
     }
 
     @Override
-    public String admPrint() {
+    public String toJSON() {
         return "\"" + value + "\"";
     }
 

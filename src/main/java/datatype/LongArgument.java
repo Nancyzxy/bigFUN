@@ -31,7 +31,7 @@ public class LongArgument implements IArgument {
     }
 
     @Override
-    public String admPrint() {
+    public String toJSON() {
         return "int64(\"" + value + "\")";
     }
 

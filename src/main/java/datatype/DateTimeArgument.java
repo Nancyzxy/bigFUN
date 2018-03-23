@@ -71,7 +71,7 @@ public class DateTimeArgument implements IArgument {
     }
 
     @Override
-    public String admPrint() {
+    public String toJSON() {
         String mo = (month < 10) ? ("0" + month) : ("" + month);
         String d = (day < 10) ? ("0" + day) : ("" + day);
         String h = (hour < 10) ? ("0" + hour) : ("" + hour);

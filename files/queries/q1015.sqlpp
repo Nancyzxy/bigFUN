@@ -1,0 +1,14 @@
+SELECT user.id AS id, COUNT(*) AS count
+FROM GleambookUsers user, GleambookMessages msg
+WHERE msg.author_id = user.id
+AND user.user_since >= 
+@PARAM
+AND user.user_since < 
+@PARAM
+AND msg.send_time >=
+@PARAM
+AND msg.send_time <
+@PARAM
+GROUP BY user.id
+ORDER BY count
+LIMIT 10;

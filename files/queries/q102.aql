@@ -1,8 +1,0 @@
-for $user in dataset GleambookUsers
-where 
-$user.id >=
-@PARAM
-and 
-$user.id <
-@PARAM
-return $user

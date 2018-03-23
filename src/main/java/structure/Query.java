@@ -40,15 +40,15 @@ public class Query {
         Iterator<String> segIt = segments.iterator();
         Iterator<IArgument> argIt = args.iterator();
 
-        StringBuilder st = new StringBuilder("use dataverse " + dataverse + ";\n");
+        StringBuilder st = new StringBuilder("USE " + dataverse + ";\n");
         while (segIt.hasNext()) {
             st.append(segIt.next()).append(" ");
             if (argIt.hasNext()) {
-                st.append(argIt.next().admPrint()).append(" ");
+                st.append(argIt.next().toJSON()).append(" ");
             }
         }
         if (argIt.hasNext()) {
-            st.append(" ").append(argIt.next().admPrint());
+            st.append(" ").append(argIt.next().toJSON());
         }
         return st.toString();
     }
