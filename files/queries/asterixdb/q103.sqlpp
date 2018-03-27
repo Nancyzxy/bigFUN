@@ -1,0 +1,7 @@
+SELECT VALUE user
+FROM GleambookUsers user
+WHERE user.user_since >= 
+@PARAM
+AND user.user_since <= 
+@PARAM
+;

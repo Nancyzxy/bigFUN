@@ -51,14 +51,17 @@ import config.Constants;
 public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility {
 
     String ccUrl;
+    int port;
     DefaultHttpClient httpclient;
     HttpGet httpGet;
     URIBuilder roBuilder;
 
-    public AsterixReadOnlyClientUtility(String cc, String qIxFile, String qGenConfigFile, String statsFile, int ignore,
+    public AsterixReadOnlyClientUtility(String cc, int port, String qIxFile,
+            String qGenConfigFile, String statsFile, int ignore,
             String qSeqFile, String resultsFile) {
         super(qIxFile, qGenConfigFile, statsFile, ignore, qSeqFile, resultsFile);
         this.ccUrl = cc;
+        this.port = port;
     }
 
     @Override
@@ -66,8 +69,8 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
         httpclient = new DefaultHttpClient();
         httpGet = new HttpGet();
         try {
-            roBuilder = new URIBuilder("http://" + ccUrl + ":" + Constants
-                    .ASTX_AQL_REST_API_PORT + "/query/service");
+            roBuilder = new URIBuilder("http://" + ccUrl + ":" + port+
+                    "/query/service");
         } catch (URISyntaxException e) {
             System.err.println("Problem in initializing Read-Only URI Builder");
             e.printStackTrace();

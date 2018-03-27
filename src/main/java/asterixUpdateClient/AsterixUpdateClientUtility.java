@@ -24,7 +24,7 @@ import org.apache.http.util.EntityUtils;
 
 import client.AbstractUpdateClientUtility;
 import config.Constants;
-import structure.AqlUpdate;
+import structure.SqlppUpdate;
 import structure.Update;
 import workloadGenerator.AbstractUpdateWorkloadGenerator;
 
@@ -33,14 +33,16 @@ public class AsterixUpdateClientUtility extends AbstractUpdateClientUtility {
     final int TRACE_PACE = 5000;
 
     String ccUrl;
+    int port;
     DefaultHttpClient httpclient;
     HttpPost httpPost;
     int counter = 0; //for trace only
 
-    public AsterixUpdateClientUtility(String cc, int batchSize, int limit, AbstractUpdateWorkloadGenerator uwg,
+    public AsterixUpdateClientUtility(String cc, int port, int batchSize, int limit, AbstractUpdateWorkloadGenerator uwg,
             String updatesFile, String statsFile, int ignore) {
         super(batchSize, limit, uwg, updatesFile, statsFile, ignore);
         this.ccUrl = cc;
+        this.port = port;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class AsterixUpdateClientUtility extends AbstractUpdateClientUtility {
         String updateBody = null;
         HttpResponse response;
         try {
-            updateBody = ((AqlUpdate) update).printAqlStatement();
+            updateBody = ((SqlppUpdate) update).printStatement();
             httpPost.setEntity(new StringEntity(updateBody));
 
             long s = System.currentTimeMillis();
@@ -90,7 +92,7 @@ public class AsterixUpdateClientUtility extends AbstractUpdateClientUtility {
     }
 
     private String getUpdateUrl() {
-        return ("http://" + ccUrl + ":" + Constants.ASTX_AQL_REST_API_PORT + "/update");
+        return ("http://" + ccUrl + ":" + port + "/update");
     }
 
     @Override

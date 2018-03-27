@@ -28,6 +28,7 @@ public class AsterixClientConfig extends AbstractClientConfig {
 
     public AbstractReadOnlyClient readReadOnlyClientConfig(String bigFunHomePath) {
         String cc = (String) getParamValue(Constants.CC_URL);
+        int port = (Integer) getParamValue(Constants.PORT_NUM);
         String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
         int iter = (int) getParamValue(Constants.ITERATIONS);
 
@@ -84,7 +85,8 @@ public class AsterixClientConfig extends AbstractClientConfig {
             resultsFile = (String) getParamValue(Constants.RESULTS_DUMP_FILE);
         }
 
-        AsterixClientReadOnlyWorkload rClient = new AsterixClientReadOnlyWorkload(cc, dvName, iter, qGenConfigFile,
+        AsterixClientReadOnlyWorkload rClient = new AsterixClientReadOnlyWorkload(
+                cc, port, dvName, iter, qGenConfigFile,
                 qIxFile, statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile, seed, maxUserId);
 
         rClient.setExecQuery(qExec);
@@ -95,6 +97,7 @@ public class AsterixClientConfig extends AbstractClientConfig {
     @Override
     public AbstractUpdateClient readUpdateClientConfig(String bigFunHomePath) {
         String cc = (String) getParamValue(Constants.CC_URL);
+        int port = (Integer) getParamValue(Constants.PORT_NUM);
         String oprType = (String) getParamValue(Constants.UPDATE_OPR_TYPE_TAG);
 
         String updatesFile = (String) getParamValue(Constants.UPDATES_FILE);
@@ -130,7 +133,9 @@ public class AsterixClientConfig extends AbstractClientConfig {
             return null;
         }
 
-        return new AsterixClientUpdateWorkload(cc, dvName, dsName, keyName, upTag, batchSize, limit, updatesFile,
+        return new AsterixClientUpdateWorkload(cc, port, dvName, dsName,
+                keyName,
+                upTag, batchSize, limit, updatesFile,
                 statsFile, ignore);
     }
 }

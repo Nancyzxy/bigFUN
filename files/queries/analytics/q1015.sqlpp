@@ -1,0 +1,16 @@
+SELECT META(user).id AS id, COUNT(*) AS count
+FROM GleambookUsers user, GleambookMessages msg
+WHERE msg.author_id = TO_STRING(META(user).id)
+AND user.user_since >=
+@PARAM
+AND user.user_since <
+@PARAM
+AND msg.send_time >=
+@PARAM
+AND msg.send_time <
+@PARAM
+GROUP BY META(user).id
+ORDER BY count
+LIMIT 10
+;
+

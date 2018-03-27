@@ -19,14 +19,14 @@ import java.util.ArrayList;
 /**
  * @author pouria
  */
-public class AqlUpdate extends Update {
+public class SqlppUpdate extends Update {
 
     private String dvName;
     private String dsName;
     private String keyName; //for delete (set to null for insert)
     private ArrayList<String> updates; //full adm records to insert, or primary keys to delete
 
-    public AqlUpdate(String dv, String ds, String key, UpdateTag t) {
+    public SqlppUpdate(String dv, String ds, String key, UpdateTag t) {
         super(t);
         setMetadata(dv, ds, key);
         updates = new ArrayList<String>();
@@ -40,14 +40,14 @@ public class AqlUpdate extends Update {
         updates.clear();
     }
 
-    public String printAqlStatement() {
+    public String printStatement() {
         switch (tag) {
             case INSERT:
                 return printInsert();
             case DELETE:
                 return printDelete();
         }
-        System.err.println("Unknow Update Type in AqlUpdate " + tag.toString());
+        System.err.println("Unknow Update Type in SqlppUpdate " + tag.toString());
         return null;
     }
 

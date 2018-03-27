@@ -40,13 +40,13 @@ public class Constants {
     public static final int INSERT_QIX = 18;
     public static final int DELETE_QIX = 19;
     public static final String CC_URL = "cc";
+    public static final String PORT_NUM = "api_port";
     public static final String ASTX_DV_NAME = "dataverse";
     public static final String ASTX_RANDOM_CLIENT_TAG = "AsterixdbReadOnly";
     public static final String ASTX_DUMP_RESULTS = "dumpResults";
     public static final String ASTX_UPDATE_CLIENT_TAG = "AsterixdbUpdate";
     public static final String ASTX_DS_NAME = "dataset";
     public static final String ASTX_KEY_NAME = "primary_key";
-    public static final int ASTX_AQL_REST_API_PORT = 19002;
     public static final int INVALID_QID = -1;
     public static final long INVALID_TIME = -1;
     public static final String[] FREQ_KW = { "Surface", "Nexus" };

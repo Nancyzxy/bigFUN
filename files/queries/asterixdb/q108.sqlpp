@@ -1,0 +1,10 @@
+SELECT uname, a
+FROM ChirpMessages cm
+WHERE cm.send_time >=
+@PARAM
+AND cm.send_time <
+@PARAM
+GROUP BY cm.user.screen_name AS uname WITH a AS AVG(LENGTH(cm.message_text))
+ORDER BY a DESC
+LIMIT 10
+;

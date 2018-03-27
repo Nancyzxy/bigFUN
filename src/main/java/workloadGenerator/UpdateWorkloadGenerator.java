@@ -14,7 +14,7 @@
  */
 package workloadGenerator;
 
-import structure.AqlUpdate;
+import structure.SqlppUpdate;
 import structure.Update;
 import structure.UpdateTag;
 
@@ -35,11 +35,11 @@ public class UpdateWorkloadGenerator extends AbstractUpdateWorkloadGenerator {
 
     @Override
     protected void modifySingleUpdate(Update update, String line) {
-        ((AqlUpdate) update).addUpdate(line);
+        ((SqlppUpdate) update).addUpdate(line);
     }
 
     @Override
     protected Update generateNewUpdate() {
-        return (new AqlUpdate(dvName, dsName, keyName, upTag));
+        return (new SqlppUpdate(dvName, dsName, keyName, upTag));
     }
 }

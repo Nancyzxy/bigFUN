@@ -1,0 +1,8 @@
+SELECT VALUE gbu
+FROM GleambookUsers gbu
+WHERE (SOME e IN gbu.employment SATISFIES e.end_date IS UNKNOWN)
+AND gbu.user_since >= 
+@PARAM
+AND gbu.user_since <= 
+@PARAM
+;

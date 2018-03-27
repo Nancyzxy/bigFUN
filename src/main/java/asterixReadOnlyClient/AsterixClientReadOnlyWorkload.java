@@ -22,14 +22,17 @@ import workloadGenerator.ReadOnlyWorkloadGenerator;
 public class AsterixClientReadOnlyWorkload extends AbstractReadOnlyClient {
 
     final String ccUrl;
+    int port;
     final String dvName;
     final int iterations;
     ReadOnlyWorkloadGenerator rwg;
 
-    public AsterixClientReadOnlyWorkload(String cc, String dvName, int iter, String qGenConfigFile, String qIxFile,
+    public AsterixClientReadOnlyWorkload(String cc, int port, String dvName,
+            int iter, String qGenConfigFile, String qIxFile,
             String statsFile, int ignore, String qSeqFile, String resDumpFile, long seed, long maxUsrId) {
         super();
         this.ccUrl = cc;
+        this.port = port;
         this.dvName = dvName;
         this.iterations = iter;
         setClientUtil(qIxFile, qGenConfigFile, statsFile, ignore, qSeqFile, resDumpFile);
@@ -71,7 +74,8 @@ public class AsterixClientReadOnlyWorkload extends AbstractReadOnlyClient {
     @Override
     public void setClientUtil(String qIxFile, String qGenConfigFile, String statsFile, int ignore, String qSeqFile,
             String resultsFile) {
-        clUtil = new AsterixReadOnlyClientUtility(ccUrl, qIxFile, qGenConfigFile, statsFile, ignore, qSeqFile,
+        clUtil = new AsterixReadOnlyClientUtility(ccUrl, port, qIxFile,
+                qGenConfigFile, statsFile, ignore, qSeqFile,
                 resultsFile);
     }
 }

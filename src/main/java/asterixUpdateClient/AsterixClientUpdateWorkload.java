@@ -22,6 +22,7 @@ import workloadGenerator.UpdateWorkloadGenerator;
 
 public class AsterixClientUpdateWorkload extends AbstractUpdateClient {
     String ccUrl;
+    int port;
     String dvName;
     String dsName;
     String keyName;
@@ -29,10 +30,12 @@ public class AsterixClientUpdateWorkload extends AbstractUpdateClient {
 
     AbstractUpdateWorkloadGenerator uwg;
 
-    public AsterixClientUpdateWorkload(String cc, String dvName, String dsName, String keyName, UpdateTag upTag,
+    public AsterixClientUpdateWorkload(String cc, int port, String dvName,
+            String dsName, String keyName, UpdateTag upTag,
             int batchSize, int limit, String updatesFile, String statsFile, int ignore) {
         super();
         this.ccUrl = cc;
+        this.port = port;
         this.dvName = dvName;
         this.dsName = dsName;
         this.keyName = keyName;
@@ -44,7 +47,9 @@ public class AsterixClientUpdateWorkload extends AbstractUpdateClient {
 
     @Override
     protected void setClientUtil(int batchSize, int limit, String updatesFile, String statsFile, int ignore) {
-        clUtil = new AsterixUpdateClientUtility(ccUrl, batchSize, limit, uwg, updatesFile, statsFile, ignore);
+        clUtil = new AsterixUpdateClientUtility(ccUrl, port, batchSize, limit,
+                uwg,
+                updatesFile, statsFile, ignore);
     }
 
     @Override

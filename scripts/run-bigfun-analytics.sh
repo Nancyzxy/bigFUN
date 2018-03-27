@@ -29,7 +29,8 @@ fi
 QUERYINDEXFILE=${BIGFUN_HOME}/files/query-index.json
 if [ ! -f ${QUERYINDEXFILE} ]; then    
 	echo -e "Generating query-index file ..."
-	${BIGFUN_HOME}/scripts/qix-gen.sh ${BIGFUN_HOME}/files/queries ${QUERYINDEXFILE}
+	${BIGFUN_HOME}/scripts/qix-gen.sh ${BIGFUN_HOME}/files/queries/analytics
+	${QUERYINDEXFILE}
 fi
 
 mkdir -p ${BIGFUN_HOME}/files/output
