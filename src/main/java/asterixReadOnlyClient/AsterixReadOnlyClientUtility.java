@@ -32,12 +32,17 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -52,16 +57,21 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
 
     String ccUrl;
     int port;
+    String user;
+    String password;
     DefaultHttpClient httpclient;
     HttpGet httpGet;
     URIBuilder roBuilder;
 
-    public AsterixReadOnlyClientUtility(String cc, int port, String qIxFile,
+    public AsterixReadOnlyClientUtility(String cc, int port, String user,
+            String password, String qIxFile,
             String qGenConfigFile, String statsFile, int ignore,
             String qSeqFile, String resultsFile) {
         super(qIxFile, qGenConfigFile, statsFile, ignore, qSeqFile, resultsFile);
         this.ccUrl = cc;
         this.port = port;
+        this.user = user;
+        this.password = password;
     }
 
     @Override
@@ -97,6 +107,13 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             long s = System.currentTimeMillis();
 
             RequestBuilder builder = RequestBuilder.post(uri);
+            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            if (user != null && password != null) {
+                credentialsProvider
+                        .setCredentials(new AuthScope(uri.getHost(), port),
+                                new UsernamePasswordCredentials(user,
+                                        password));
+            }
             ObjectMapper om = new ObjectMapper();
             ObjectNode content = om.createObjectNode();
                 content.put("statement", qBody);
@@ -111,7 +128,8 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             HttpUriRequest method = builder.build();
             // Set accepted output response type
             method.setHeader("Accept", "application/json");
-            HttpResponse response = executeHttpRequest(method);
+            HttpResponse response = executeHttpRequest(method,
+                    credentialsProvider);
             StringWriter resultWriter = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(),resultWriter,StandardCharsets
                     .UTF_8);
@@ -139,13 +157,13 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
 
     }
 
-    protected HttpResponse executeHttpRequest(HttpUriRequest method)
+    protected HttpResponse executeHttpRequest(HttpUriRequest method,
+            CredentialsProvider credentialsProvider)
             throws Exception {
-        // https://issues.apache.org/jira/browse/ASTERIXDB-2315
         ExecutorService executor = Executors.newSingleThreadExecutor();
         CloseableHttpClient client = HttpClients.custom()
                 .setRetryHandler(StandardHttpRequestRetryHandler.INSTANCE)
-                .build();
+                .setDefaultCredentialsProvider(credentialsProvider).build();
         Future<HttpResponse> future = executor.submit(() -> {
             try {
                 return client.execute(method, (HttpContext) null);

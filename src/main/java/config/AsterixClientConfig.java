@@ -28,6 +28,8 @@ public class AsterixClientConfig extends AbstractClientConfig {
 
     public AbstractReadOnlyClient readReadOnlyClientConfig(String bigFunHomePath) {
         String cc = (String) getParamValue(Constants.CC_URL);
+        String httpUser = (String) getParamValue(Constants.USER_NAME);
+        String httpPassword = (String) getParamValue(Constants.PASSWORD);
         int port = (Integer) getParamValue(Constants.PORT_NUM);
         String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
         int iter = (int) getParamValue(Constants.ITERATIONS);
@@ -86,7 +88,7 @@ public class AsterixClientConfig extends AbstractClientConfig {
         }
 
         AsterixClientReadOnlyWorkload rClient = new AsterixClientReadOnlyWorkload(
-                cc, port, dvName, iter, qGenConfigFile,
+                cc, port, httpUser, httpPassword, dvName, iter, qGenConfigFile,
                 qIxFile, statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile, seed, maxUserId);
 
         rClient.setExecQuery(qExec);

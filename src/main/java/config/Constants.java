@@ -41,6 +41,8 @@ public class Constants {
     public static final int DELETE_QIX = 19;
     public static final String CC_URL = "cc";
     public static final String PORT_NUM = "api_port";
+    public static final String USER_NAME = "http_user";
+    public static final String PASSWORD = "http_passwd";
     public static final String ASTX_DV_NAME = "dataverse";
     public static final String ASTX_RANDOM_CLIENT_TAG = "AsterixdbReadOnly";
     public static final String ASTX_DUMP_RESULTS = "dumpResults";
