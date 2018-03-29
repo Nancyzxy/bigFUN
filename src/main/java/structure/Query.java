@@ -36,11 +36,14 @@ public class Query {
         this.args = new ArrayList<IArgument>();
     }
 
-    public String aqlPrint(String dataverse) {
+    public String sqlppPrint(String dataverse) {
         Iterator<String> segIt = segments.iterator();
         Iterator<IArgument> argIt = args.iterator();
 
-        StringBuilder st = new StringBuilder("USE " + dataverse + ";\n");
+        StringBuilder st = new StringBuilder();
+        if(dataverse != null) {
+            st = new StringBuilder("USE " + dataverse + ";\n");
+        }
         while (segIt.hasNext()) {
             st.append(segIt.next()).append(" ");
             if (argIt.hasNext()) {

@@ -67,7 +67,7 @@ public class AsterixClientReadOnlyWorkload extends AbstractReadOnlyClient {
                     continue; //do not break, if one query is not found
                 }
                 if (execQuery) {
-                    clUtil.executeQuery(qid, vid, q.aqlPrint(dvName));
+                    clUtil.executeQuery(qid, vid, q.sqlppPrint(dvName));
                 }
             }
             iteration_end = System.currentTimeMillis();

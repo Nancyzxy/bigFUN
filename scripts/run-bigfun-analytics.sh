@@ -1,5 +1,5 @@
 #!/bin/bash
-BIGFUN_HOME=/home/parshimers/Work/UCI/bigFUN
+BIGFUN_HOME=/Users/ianmaxon/bigFUN
 
 
 if [ -z $BIGFUN_HOME ]
