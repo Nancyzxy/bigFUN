@@ -15,6 +15,7 @@
 package client;
 
 public abstract class AbstractClient {
+    public final int seed = 5;
 
     public abstract void execute();
 

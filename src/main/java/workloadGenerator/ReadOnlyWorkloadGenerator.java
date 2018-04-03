@@ -19,12 +19,12 @@ import java.util.ArrayList;
 
 import config.RandomQueryGeneratorConfig;
 import datatype.IArgument;
-import queryGenerator.RandomQueryGenerator;
+import queryGenerator.RandomSqlppQueryGenerator;
 import structure.Query;
 
 public class ReadOnlyWorkloadGenerator extends AbstractReadOnlyWorkloadGenerator {
 
-    final RandomQueryGenerator rqGen;
+    final RandomSqlppQueryGenerator rqGen;
 
     public ReadOnlyWorkloadGenerator(String qIndexFile, String qGenConfigFile, long seed, long maxUsrId) {
         super();
@@ -34,11 +34,11 @@ public class ReadOnlyWorkloadGenerator extends AbstractReadOnlyWorkloadGenerator
             System.err.println("Error in loading qIndexFile in RandomWorkloadGenerator");
             e.printStackTrace();
         }
-        rqGen = new RandomQueryGenerator(seed, maxUsrId);
+        rqGen = new RandomSqlppQueryGenerator(seed, maxUsrId);
         try {
             RandomQueryGeneratorConfig.configure(rqGen, qGenConfigFile);
         } catch (IOException e) {
-            System.err.println("Error in configuring RandomQueryGenerator");
+            System.err.println("Error in configuring RandomSqlppQueryGenerator");
             e.printStackTrace();
         }
     }

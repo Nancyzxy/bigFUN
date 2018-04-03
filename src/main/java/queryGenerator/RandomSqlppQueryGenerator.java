@@ -27,7 +27,7 @@ import datatype.IArgument;
 import datatype.LongArgument;
 import datatype.StringArgument;
 
-public class RandomQueryGenerator {
+public class RandomSqlppQueryGenerator {
 
     DateTimeArgument START_DATE;
     DateTimeArgument END_DATE;
@@ -39,7 +39,7 @@ public class RandomQueryGenerator {
 
     QueryParamSetting qps;
 
-    public RandomQueryGenerator(long seed, long maxUsrId) {
+    public RandomSqlppQueryGenerator(long seed, long maxUsrId) {
         this.rand = new Random(seed);
         setStartDate(ArgumentParser.parseDateTime(Constants.DEFAULT_START_DATE));
         setEndDate(ArgumentParser.parseDateTime(Constants.DEFAULT_END_DATE));
