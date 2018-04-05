@@ -17,6 +17,7 @@ package queryGenerator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Random;
 
 import config.Constants;
@@ -26,9 +27,12 @@ import datatype.DoubleArgument;
 import datatype.IArgument;
 import datatype.LongArgument;
 import datatype.StringArgument;
+import structure.Query;
+import structure.TextualQuery;
 
-public class RandomSqlppQueryGenerator {
+import javax.xml.soap.Text;
 
+public class RandomQueryParameterGenerator {
     DateTimeArgument START_DATE;
     DateTimeArgument END_DATE;
     long MAX_FB_USR_ID;
@@ -39,7 +43,7 @@ public class RandomSqlppQueryGenerator {
 
     QueryParamSetting qps;
 
-    public RandomSqlppQueryGenerator(long seed, long maxUsrId) {
+    public RandomQueryParameterGenerator(long seed, long maxUsrId) {
         this.rand = new Random(seed);
         setStartDate(ArgumentParser.parseDateTime(Constants.DEFAULT_START_DATE));
         setEndDate(ArgumentParser.parseDateTime(Constants.DEFAULT_END_DATE));
@@ -47,7 +51,7 @@ public class RandomSqlppQueryGenerator {
         this.args = new ArrayList<IArgument>();
     }
 
-    public ArrayList<IArgument> nextQuery(int qIx, int vIx) {
+    public List<IArgument> nextQuery(int qIx, int vIx) {
         args.clear();
         switch (qIx) {
 

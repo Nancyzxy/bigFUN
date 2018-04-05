@@ -96,11 +96,11 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
     }
 
     @Override
-    public void executeQuery(int qid, int vid, String qBody) {
+    public void executeQuery(int qid, int vid, Object qBody) {
         long rspTime = Constants.INVALID_TIME;
         String result = "";
         try {
-            roBuilder.setParameter("query", qBody);
+            roBuilder.setParameter("query", (String) qBody);
             URI uri = roBuilder.build();
             httpGet.setURI(uri);
 
@@ -116,7 +116,7 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             }
             ObjectMapper om = new ObjectMapper();
             ObjectNode content = om.createObjectNode();
-                content.put("statement", qBody);
+                content.put("statement", (String) qBody);
             try {
                 builder.setEntity(
                         new StringEntity(om.writeValueAsString(content),

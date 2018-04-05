@@ -21,16 +21,16 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import queryGenerator.QueryParamSetting;
-import queryGenerator.RandomSqlppQueryGenerator;
+import queryGenerator.RandomQueryParameterGenerator;
 
 /**
- * Goes through a config file and configures a RandomSqlppQueryGenerator accordingly
+ * Goes through a config file and configures a RandomQueryParameterGenerator accordingly
  * 
  * @author pouria
  */
 public class RandomQueryGeneratorConfig {
 
-    public static void configure(RandomSqlppQueryGenerator rqGen, String configFile) throws IOException {
+    public static void configure(RandomQueryParameterGenerator rqGen, String configFile) throws IOException {
         rqGen.setQParamSetting(parseQParamSettings(configFile));
     }
 

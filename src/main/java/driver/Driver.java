@@ -16,7 +16,7 @@ package driver;
 
 import client.AbstractClient;
 import config.AbstractClientConfig;
-import config.AsterixClientConfig;
+import config.ClientConfig;
 import config.Constants;
 
 public class Driver {
@@ -30,7 +30,7 @@ public class Driver {
         String bigFunHome = args[0];
         bigFunHome = bigFunHome.replaceAll("/$", "");
         String clientConfigFile = bigFunHome + "/conf/bigfun-conf.json";
-        AbstractClientConfig clientConfig = new AsterixClientConfig(clientConfigFile);
+        ClientConfig clientConfig = new ClientConfig(clientConfigFile);
         clientConfig.parseConfigFile();
         if (!clientConfig.isParamSet(Constants.CLIENT_TYPE)) {
             System.err.println("The Client Type is not set to a valid value in the config file.");
@@ -40,10 +40,13 @@ public class Driver {
         AbstractClient client = null;
         switch (clientTypeTag) {
             case Constants.ASTX_RANDOM_CLIENT_TAG:
-                client = clientConfig.readReadOnlyClientConfig(bigFunHome);
+                client = clientConfig.readReadOnlyAsterixClientConfig(bigFunHome);
                 break;
             case Constants.ASTX_UPDATE_CLIENT_TAG:
                 client = clientConfig.readUpdateClientConfig(bigFunHome);
+                break;
+            case Constants.MONGO_RANDOM_CLIENT_TAG:
+                client = clientConfig.readReadOnlyMongoClientConfig(bigFunHome);
                 break;
 
             default:

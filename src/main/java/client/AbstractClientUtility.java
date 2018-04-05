@@ -17,13 +17,18 @@ package client;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.List;
 
+import structure.MongoQuery;
+import structure.Pair;
+import structure.Query;
 import structure.StatsCollector;
 
 public abstract class AbstractClientUtility {
 
     protected PrintWriter resPw;
     protected StatsCollector sc;
+    public List<Pair> qvids;
 
     public AbstractClientUtility(String statsFile, String resultsFile, int ignore) {
         this.sc = new StatsCollector(statsFile, ignore);
@@ -49,4 +54,11 @@ public abstract class AbstractClientUtility {
         sc.report();
     }
 
+    public abstract void setDumpResults(boolean b);
+
+    public abstract String getQGenConfigFile();
+
+    public abstract void executeQuery(int qid, int vid, Object q);
+
+    public abstract String getQIxFile();
 }

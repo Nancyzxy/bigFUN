@@ -37,7 +37,7 @@ public abstract class AbstractUpdateWorkloadGenerator {
     public Update getNextUpdate() {
         if (updateReader == null) {
             System.err.println(
-                    "Update generator does not have (or already consumed) its update reader.\nYou need to reset it !");
+                    "Update generator does not have (or already consumed) its update reader.\nYou need to setArgs it !");
             return null;
         }
         Update upd = generateNewUpdate();

@@ -56,6 +56,22 @@ public class AsterixUpdateClientUtility extends AbstractUpdateClientUtility {
         httpclient.getConnectionManager().shutdown();
     }
 
+    @Override public void setDumpResults(boolean b) {
+
+    }
+
+    @Override public String getQGenConfigFile() {
+        return null;
+    }
+
+    @Override public void executeQuery(int qid, int vid, Object q) {
+
+    }
+
+    @Override public String getQIxFile() {
+        return null;
+    }
+
     @Override
     public void executeUpdate(int qid, Update update) {
         long rspTime = Constants.INVALID_TIME;

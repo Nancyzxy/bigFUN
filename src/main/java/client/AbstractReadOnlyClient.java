@@ -17,7 +17,7 @@ package client;
 public abstract class AbstractReadOnlyClient extends AbstractClient {
 
     protected boolean execQuery;
-    protected AbstractReadOnlyClientUtility clUtil;
+    protected AbstractClientUtility clUtil;
 
     public AbstractReadOnlyClient() {
     }

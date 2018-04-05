@@ -23,16 +23,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import config.Constants;
+import config.RandomQueryGeneratorConfig;
+import queryGenerator.RandomQueryParameterGenerator;
 import structure.Query;
+import structure.TextualQuery;
 
-public abstract class AbstractReadOnlyWorkloadGenerator {
+public class ReadOnlyTextQueryWorkloadGenerator extends
+        AbstractReadOnlyStringQueryGenerator {
 
     HashMap<Integer, Query> qIxToQuery;
 
-    public AbstractReadOnlyWorkloadGenerator() {
-        this.qIxToQuery = new HashMap<Integer, Query>();
+    public ReadOnlyTextQueryWorkloadGenerator(){
+       super();
+       qIxToQuery = new HashMap<>();
     }
 
     protected void loadQueryTemplate(String qIndexFile) throws IOException {
@@ -49,7 +53,7 @@ public abstract class AbstractReadOnlyWorkloadGenerator {
 
     private void addQuery(String segmentsFile, int ix) throws IOException {
         if (qIxToQuery.containsKey(ix)) {
-            System.err.println("ERROR - Query Already Exists for Index " + ix);
+            System.err.println("ERROR - TextualQuery Already Exists for Index " + ix);
             return;
         }
 
@@ -69,6 +73,25 @@ public abstract class AbstractReadOnlyWorkloadGenerator {
         if (thisSeg.length() > 0) {
             segments.add(thisSeg);
         }
-        qIxToQuery.put(ix, new Query(segments));
+        qIxToQuery.put(ix, new TextualQuery(segments));
     }
+
+    public ReadOnlyTextQueryWorkloadGenerator(String qIndexFile, String
+            qGenConfigFile, long seed, long maxUsrId ) {
+        super();
+        try {
+            loadQueryTemplate(qIndexFile);
+        } catch (IOException e) {
+            System.err.println("Error in loading qIndexFile in RandomWorkloadGenerator");
+            e.printStackTrace();
+        }
+        rqGen = new RandomQueryParameterGenerator(seed, maxUsrId);
+        try {
+            RandomQueryGeneratorConfig.configure(rqGen, qGenConfigFile);
+        } catch (IOException e) {
+            System.err.println("Error in configuring RandomQueryParameterGenerator");
+            e.printStackTrace();
+        }
+    }
+
 }

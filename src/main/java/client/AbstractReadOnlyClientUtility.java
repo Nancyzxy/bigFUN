@@ -27,10 +27,10 @@ public abstract class AbstractReadOnlyClientUtility extends AbstractClientUtilit
 
     private final String qIndexFile;
     private final String qGenConfigFile;
-    public ArrayList<Pair> qvids;
     protected boolean dumpResults = false;
+    public ArrayList<Pair> qvids;
 
-    public abstract void executeQuery(int qid, int vid, String qBody);
+    public abstract void executeQuery(int qid, int vid, Object query);
 
     public AbstractReadOnlyClientUtility(String qIxFile, String qGenConfigFile, String statsFile, int ignore,
             String workloadFile, String resultsFile) {
@@ -67,7 +67,7 @@ public abstract class AbstractReadOnlyClientUtility extends AbstractClientUtilit
         }
     }
 
-    protected void setDumpResults(boolean b) {
+    public void setDumpResults(boolean b) {
         this.dumpResults = b;
     }
 

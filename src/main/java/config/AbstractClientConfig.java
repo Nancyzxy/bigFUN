@@ -30,7 +30,7 @@ public abstract class AbstractClientConfig {
         this.clientConfigFile = clientConfigFile;
     }
 
-    public abstract AbstractReadOnlyClient readReadOnlyClientConfig(String bigFunHomePath);
+    public abstract AbstractReadOnlyClient readReadOnlyAsterixClientConfig(String bigFunHomePath);
 
     public abstract AbstractUpdateClient readUpdateClientConfig(String bigFunHomePath);
 
