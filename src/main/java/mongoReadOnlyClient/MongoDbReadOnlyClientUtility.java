@@ -15,6 +15,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import datatype.DateTimeArgument;
 import datatype.IArgument;
@@ -41,6 +42,7 @@ public class MongoDbReadOnlyClientUtility extends
 	public static final String TWM_SPATIAL_ATT = "sender_location";
 
 	DB db;
+	MongoClient client;
 	Random rand;
 	String host;
 	int port;
@@ -63,15 +65,14 @@ public class MongoDbReadOnlyClientUtility extends
 	//range scan on a temporal attribute
 
 	//used for running queries that consists of a BasicDBObject
-	private StatsPair runBasicDBObjectQuery(int qid, String collection,
+	private void runBasicDBObjectQuery(int qid, int vid, String collection,
 			BasicDBObject query, List<BasicDBObject> aggregation,
 			BasicDBObject prjFields) {
-		StatsPair stats = new StatsPair();
+		StringBuilder result = new StringBuilder();
 		DBCollection dbCol = db.getCollection(collection);
 		if (dbCol == null) {
 			System.err.println(
 					"Collection " + collection + " could not be found");
-			return stats;
 		}
 		Cursor cursor = null;
 		long s = System.currentTimeMillis();
@@ -87,7 +88,8 @@ public class MongoDbReadOnlyClientUtility extends
 		int rs = 0;
 		if (cursor != null) {
 			while (cursor.hasNext()) {
-				cursor.next();
+				DBObject row = cursor.next();
+				result.append(row.toString());
 				rs++;
 
 				//		if ((rs % 5000 == 0) || (rs == 100)) {
@@ -101,51 +103,36 @@ public class MongoDbReadOnlyClientUtility extends
 			System.err.println(
 					"TextualQuery " + qid + " returned null cursor" + (query
 					.toString()));
-			return stats;
 		}
 		long e = System.currentTimeMillis();
 		long rspTime = (e - s);
+		updateStat(qid, vid, rspTime);
 		if (resPw != null) {
 			resPw.println(qid);
-			if (query == null) {
-				resPw.println(aggregation.toString() + "\n");
-			} else {
-				resPw.println(query.toString() + "\n");
+			resPw.println("Ver " + vid);
+			resPw.println(query == null ? aggregation.toString() : query.toString() +
+					"\n");
+			if (dumpResults) {
+				resPw.println(result.toString());
+				resPw.print('\n');
 			}
+			resPw.flush();
 		}
-		resPw.flush();
-		cursor.close();
-		System.out.println("\tCursor closed successfully");
-		stats.setTime(rspTime);
-		stats.setSize(rs);
-		return stats;
 	}
 
-	//	public static void main(String args[]) {
-	//		MongoClient mc = new MongoClient("localhost");
-	//		DB md = mc.getDB("bigfun");
-	//		PrintWriter pw = new PrintWriter(System.out);
-	//		pw.flush();
-	//		MongoDbReadOnlyClientUtility me = new MongoDbReadOnlyClientUtility(md,
-	//				pw);
-	//		me.execute();
-	//	}
-
 	@Override public void init() {
-
-		this.db = new MongoClient(host, port).getDB("bigfun");
+		client = new MongoClient(host, port);
+		this.db = client.getDB("bigfun");
 
 	}
 
 	@Override public void terminate() {
-
-	}
-
-	@Override public void generateReport() {
+	    client.close();
 
 	}
 
 	@Override public void setDumpResults(boolean b) {
+		this.dumpResults = b;
 
 	}
 
@@ -156,10 +143,11 @@ public class MongoDbReadOnlyClientUtility extends
 	@Override public void executeQuery(int qid, int vid, Object q) {
 		MongoQuery query = (MongoQuery) q;
 		if (((MongoQuery) q).isAggregation()) {
-			runBasicDBObjectQuery(qid, ((MongoQuery) q).getCollection(), null, query.getQuery(),
+			runBasicDBObjectQuery(qid,vid, ((MongoQuery) q).getCollection(),
+					null, query.getQuery(),
 					null);
 		} else {
-			runBasicDBObjectQuery(qid,((MongoQuery) q).getCollection(),
+			runBasicDBObjectQuery(qid,vid,((MongoQuery) q).getCollection(),
 					query.getQuery().get(0), null, null);
 		}
 
@@ -170,35 +158,3 @@ public class MongoDbReadOnlyClientUtility extends
 	}
 }
 
-class StatsPair{
-	public static final int INVALID_RS = -1;
-	public static final long INVALID_TIME = -1;
-
-	private long time;
-	private int size;
-
-	public StatsPair() {
-		time = INVALID_TIME;
-		size = INVALID_RS;
-	}
-
-	public void setTime(long t) {
-		time = t;
-	}
-
-	public void setSize(int s) {
-		size = s;
-	}
-
-	public long getTime() {
-		return time;
-	}
-
-	public int getSize() {
-		return size;
-	}
-
-	public String print() {
-		return "Time:\t" + getTime() + "\nSize:\t" + getSize();
-	}
-}
