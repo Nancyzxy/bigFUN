@@ -9,6 +9,7 @@ import java.util.Random;
 
 import client.AbstractClient;
 import client.AbstractClientUtility;
+import client.AbstractReadOnlyClientUtility;
 import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
@@ -19,7 +20,8 @@ import datatype.DateTimeArgument;
 import datatype.IArgument;
 import structure.MongoQuery;
 
-public class MongoDbReadOnlyClientUtility extends AbstractClientUtility {
+public class MongoDbReadOnlyClientUtility extends
+		AbstractReadOnlyClientUtility {
 
 	public static final String FBU_COLL_NAME = "gleam_users";
 	public static final String FBM_COLL_NAME = "gleam_messages";
@@ -49,7 +51,7 @@ public class MongoDbReadOnlyClientUtility extends AbstractClientUtility {
 	public MongoDbReadOnlyClientUtility(String host, int port, String user,
 			String password, String qGenConfigFile, String statsFile,
 			int ignore, String qSeqFile, String resultsFile) {
-		super(statsFile, resultsFile, ignore);
+	    super(null,qGenConfigFile,statsFile,ignore,qSeqFile,resultsFile);
 		this.host = host;
 		this.port = port;
 		this.user = user;
@@ -154,10 +156,10 @@ public class MongoDbReadOnlyClientUtility extends AbstractClientUtility {
 	@Override public void executeQuery(int qid, int vid, Object q) {
 		MongoQuery query = (MongoQuery) q;
 		if (((MongoQuery) q).isAggregation()) {
-			runBasicDBObjectQuery(qid, "gleam_messages", null, query.getQuery(),
+			runBasicDBObjectQuery(qid, ((MongoQuery) q).getCollection(), null, query.getQuery(),
 					null);
 		} else {
-			runBasicDBObjectQuery(qid, "gleam_messages",
+			runBasicDBObjectQuery(qid,((MongoQuery) q).getCollection(),
 					query.getQuery().get(0), null, null);
 		}
 

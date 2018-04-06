@@ -36,34 +36,37 @@ public class ReadOnlyMongoQueryWorkloadGenerator
 
         List<DateTimeArgument> dateArgs = (List<DateTimeArgument>) (List<?>)
                 args;
+        q.setArgs(args);
 
         switch (qid) {
 
             case 103:
                 q.setQuery(Arrays.asList(
                         scanTemporalRange(dateArgs.get(0), dateArgs.get(1))),
-                        false);
+                        false, "gleam_users");
                 break;
 
             case 104:
                 q.setQuery(Arrays.asList(
                         eQuantification(dateArgs.get(0), dateArgs.get(1))),
-                        false);
+                        false,"gleam_users");
                 break;
 
             case 108:
                 q.setQuery(groupedAggregation(dateArgs.get(0), dateArgs.get(1)),
-                        true);
+                        true,"chirp_messages");
                 break;
 
             case 1014:
                 q.setQuery(JoinGroupBy(dateArgs.get(0), dateArgs.get(1),
-                        dateArgs.get(2), dateArgs.get(3)), true);
+                        dateArgs.get(2), dateArgs.get(3)), true,
+                        "gleam_messages");
                 break;
             case 1015:
                 q.setQuery(
                         JoinGroupBySortLimit(dateArgs.get(0), dateArgs.get(1),
-                                dateArgs.get(2), dateArgs.get(3)), true);
+                                dateArgs.get(2), dateArgs.get(3)), true,
+                        "gleam_messages");
                 break;
 
             default:
@@ -95,10 +98,7 @@ public class ReadOnlyMongoQueryWorkloadGenerator
         BasicDBObject query = filter.append("employment", elemMatch);
 
         BasicDBObject prjFields = new BasicDBObject();
-        prjFields.put("_id", 0);
-        prjFields.put("name", 1);
-        prjFields.put("employment", 1);
-        return query.append("$project", prjFields);
+        return query;
 
     }
 

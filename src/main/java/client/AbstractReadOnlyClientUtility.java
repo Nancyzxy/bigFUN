@@ -28,7 +28,6 @@ public abstract class AbstractReadOnlyClientUtility extends AbstractClientUtilit
     private final String qIndexFile;
     private final String qGenConfigFile;
     protected boolean dumpResults = false;
-    public ArrayList<Pair> qvids;
 
     public abstract void executeQuery(int qid, int vid, Object query);
 
