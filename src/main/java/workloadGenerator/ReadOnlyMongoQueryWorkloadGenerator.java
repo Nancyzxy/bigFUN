@@ -1,6 +1,7 @@
 package workloadGenerator;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import config.RandomQueryGeneratorConfig;
 import datatype.DateTimeArgument;
 import datatype.IArgument;
@@ -9,6 +10,7 @@ import structure.MongoQuery;
 import structure.Query;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -43,31 +45,30 @@ public class ReadOnlyMongoQueryWorkloadGenerator
             case 103:
                 q.setQuery(Arrays.asList(
                         scanTemporalRange(dateArgs.get(0), dateArgs.get(1))),
-                        false, "gleam_users");
+                        MongoQuery.QueryType.FIND, "gleam_users");
                 break;
 
             case 104:
                 q.setQuery(Arrays.asList(
                         eQuantification(dateArgs.get(0), dateArgs.get(1))),
-                        false,"gleam_users");
+                        MongoQuery.QueryType.FIND,"gleam_users");
                 break;
 
             case 108:
                 q.setQuery(groupedAggregation(dateArgs.get(0), dateArgs.get(1)),
-                        true,"chirp_messages");
+                        MongoQuery.QueryType.AGGREGATE,"chirp_messages");
+                break;
+            case 110:
+                q.setQuery(Arrays.asList(scan()),MongoQuery.QueryType.FIND,"chirp_messages");
                 break;
 
             case 1014:
-                q.setQuery(JoinGroupBy(dateArgs.get(0), dateArgs.get(1),
-                        dateArgs.get(2), dateArgs.get(3)), true,
-                        "gleam_messages");
+                q.setQuery(getUsers(dateArgs.get(2),dateArgs.get(3)),JoinGroupBy(dateArgs.get(0),dateArgs.get(1),q.getbTable()),"gleam_users","gleam_messages");
                 break;
             case 1015:
-                q.setQuery(
-                        JoinGroupBySortLimit(dateArgs.get(0), dateArgs.get(1),
-                                dateArgs.get(2), dateArgs.get(3)), true,
-                        "gleam_messages");
+                q.setQuery(getUsers(dateArgs.get(2),dateArgs.get(3)),JoinGroupBySortLimit(dateArgs.get(0),dateArgs.get(1),q.getbTable()),"gleam_users","gleam_messages");
                 break;
+
 
             default:
                 System.err.println("Unknown qid for mongodb " + qid);
@@ -78,9 +79,8 @@ public class ReadOnlyMongoQueryWorkloadGenerator
     private BasicDBObject scanTemporalRange(DateTimeArgument sDate,
             DateTimeArgument eDate) {
         BasicDBObject query = new BasicDBObject("user_since",
-                new BasicDBObject("$gte",
-                        new BasicDBObject("user_since", sDate.toJSON())
-                                .append("$lt", eDate.toJSON())));
+                new BasicDBObject("$gte", sDate.toJSON())
+                                .append("$lt", eDate.toJSON()));
 
         return query;
     }
@@ -102,9 +102,27 @@ public class ReadOnlyMongoQueryWorkloadGenerator
 
     }
 
+    private BasicDBObject scan() {
+        BasicDBObject exists = new BasicDBObject("$exists", true);
+        BasicDBObject end = new BasicDBObject("doesnt_exist", exists);
+        BasicDBObject elemMatch = new BasicDBObject("$elemMatch", end);
+        BasicDBObject query = new BasicDBObject("employment", elemMatch);
+        return query;
+
+    }
+
     private List<BasicDBObject> groupedAggregation(DateTimeArgument sDate,
             DateTimeArgument eDate) {
-        List<BasicDBObject> query = Arrays.asList(new BasicDBObject("$group",
+        List<BasicDBObject> query =
+                Arrays.asList(
+                new BasicDBObject("$match",
+                                new BasicDBObject("send_time",
+                                                new BasicDBObject(
+                                                        "$gte",
+                                                                sDate.toJSON()).append( "$lt",eDate.toJSON())
+
+                                                )),
+                new BasicDBObject("$group",
                         new BasicDBObject("_id", "$chirpid").append("avg",
                                 new BasicDBObject("$avg", new BasicDBObject("$strLenCP",
                                         "$message_text")))),
@@ -120,52 +138,40 @@ public class ReadOnlyMongoQueryWorkloadGenerator
 
     }
 
+
+    private BasicDBObject getUsers(DateTimeArgument sDate,
+                                            DateTimeArgument eDate) {
+        BasicDBObject query = new BasicDBObject("user_since",
+                new BasicDBObject("$gte", sDate.toJSON())
+                        .append("$lt", eDate.toJSON()));
+
+        return query;
+    }
+
     private List<BasicDBObject> JoinGroupBySortLimit(DateTimeArgument m1,
-            DateTimeArgument m2, DateTimeArgument u1, DateTimeArgument u2) {
+            DateTimeArgument m2, List<String> broadcastTable ) {
 
-        List<BasicDBObject> query = Arrays.asList(new BasicDBObject("$lookup",
-                        new BasicDBObject("from", "gleam_users").append("let",
-                                new BasicDBObject("send_time", "$send_time")
-                                        .append("author_id", "$author_id"))
-                                .append("pipeline", Arrays.asList(
-                                        new BasicDBObject("$match",
-                                                new BasicDBObject("$expr",
-                                                        new BasicDBObject("$and",
-                                                                Arrays.asList(
-                                                                        new BasicDBObject(
-                                                                                "$eq",
-                                                                                Arrays.asList(
-                                                                                        "$id",
-                                                                                        "$$author_id")),
-                                                                        new BasicDBObject(
-                                                                                "$gte",
-                                                                                Arrays.asList(
-                                                                                        "$user_since",
-                                                                                        u1.toJSON())),
-                                                                        new BasicDBObject(
-                                                                                "$lt",
-                                                                                Arrays.asList(
-                                                                                        "$user_since",
-                                                                                        u2.toJSON())),
+         return Arrays.asList(
+                new BasicDBObject("$match",
+                        new BasicDBObject("$expr",
+                                new BasicDBObject("$and",
+                                        Arrays.asList(
+                                                new BasicDBObject(
+                                                        "$in",
+                                                        Arrays.asList("$author_id",broadcastTable)),
+                                                new BasicDBObject(
+                                                        "$gte",
+                                                        Arrays.asList(
+                                                                "$send_time",
+                                                                m1.toJSON())),
+                                                new BasicDBObject(
+                                                        "$lt",
+                                                        Arrays.asList(
+                                                                "$send_time",
+                                                                m2.toJSON()))
 
-                                                                        new BasicDBObject(
-                                                                                "$gte",
-                                                                                Arrays.asList(
-                                                                                        "$$send_time",
-                                                                                        m1.toJSON())),
-                                                                        new BasicDBObject(
-                                                                                "$lt",
-                                                                                Arrays.asList(
-                                                                                        "$$send_time",
-                                                                                        m2.toJSON()))
-
-                                                                ))))))
-                                .append("as", "user")),
-
-                new BasicDBObject("$match", new BasicDBObject("user",
-                        new BasicDBObject("$ne",
-                                Arrays.asList(new BasicDBObject())))),
-                new BasicDBObject("$group", new BasicDBObject("_id", "$user.id")
+                                        )))),
+                new BasicDBObject("$group", new BasicDBObject("_id", "$author_id")
                         .append("count", new BasicDBObject("$sum", 1))),
                 new BasicDBObject("$unwind", "$_id"),
                 new BasicDBObject("$project",
@@ -176,60 +182,35 @@ public class ReadOnlyMongoQueryWorkloadGenerator
                         new BasicDBObject("_id", 0).append("uid", "$_id")
                                 .append("count", 1)));
 
-        return query;
     }
 
     private List<BasicDBObject> JoinGroupBy(DateTimeArgument m1,
-            DateTimeArgument m2, DateTimeArgument u1, DateTimeArgument u2) {
+            DateTimeArgument m2, List<String> broadcastTable) {
 
-        List<BasicDBObject> query = Arrays.asList(new BasicDBObject("$lookup",
-                        new BasicDBObject("from", "gleam_users").append("let",
-                                new BasicDBObject("send_time", "$send_time")
-                                        .append("author_id", "$author_id"))
-                                .append("pipeline", Arrays.asList(
-                                        new BasicDBObject("$match",
-                                                new BasicDBObject("$expr",
-                                                        new BasicDBObject("$and",
-                                                                Arrays.asList(
-                                                                        new BasicDBObject(
-                                                                                "$eq",
-                                                                                Arrays.asList(
-                                                                                        "$id",
-                                                                                        "$$author_id")),
-                                                                        new BasicDBObject(
-                                                                                "$gte",
-                                                                                Arrays.asList(
-                                                                                        "$user_since",
-                                                                                        u1.toJSON())),
-                                                                        new BasicDBObject(
-                                                                                "$lt",
-                                                                                Arrays.asList(
-                                                                                        "$user_since",
-                                                                                        u2.toJSON())),
-                                                                        new BasicDBObject(
-                                                                                "$gte",
-                                                                                Arrays.asList(
-                                                                                        "$$send_time",
-                                                                                        m1.toJSON())),
-                                                                        new BasicDBObject(
-                                                                                "$lt",
-                                                                                Arrays.asList(
-                                                                                        "$$send_time",
-                                                                                        m2.toJSON()))
+        return Arrays.asList(new BasicDBObject("$match",
+                new BasicDBObject("$expr",
+                        new BasicDBObject("$and",
+                                Arrays.asList(
+                                        new BasicDBObject(
+                                                "$in",
+                                                Arrays.asList("$author_id",broadcastTable)),
+                                        new BasicDBObject(
+                                                "$gte",
+                                                Arrays.asList(
+                                                        "$send_time",
+                                                        m1.toJSON())),
+                                        new BasicDBObject(
+                                                "$lt",
+                                                Arrays.asList(
+                                                        "$send_time",
+                                                        m2.toJSON()))
 
-                                                                ))))))
-                                .append("as", "user")),
-
-                new BasicDBObject("$match", new BasicDBObject("user",
-                        new BasicDBObject("$ne",
-                                Arrays.asList(new BasicDBObject())))),
-                new BasicDBObject("$group", new BasicDBObject("_id", "$user.id")
+                                )))),
+                new BasicDBObject("$group", new BasicDBObject("_id", "$author_id")
                         .append("count", new BasicDBObject("$sum", 1))),
                 new BasicDBObject("$unwind", "$_id"),
                 new BasicDBObject("$project",
                         new BasicDBObject("_id", 0).append("uid", "$_id")
                                 .append("count", 1)));
-
-        return query;
     }
 }

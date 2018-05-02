@@ -1,11 +1,7 @@
 package mongoReadOnlyClient;
 
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import client.AbstractClient;
 import client.AbstractClientUtility;
@@ -82,7 +78,7 @@ public class MongoDbReadOnlyClientUtility extends
 			// retrieve all fields
 			cursor = dbCol.find(query);
 		} else {
-			AggregationOptions options = AggregationOptions.builder().build();
+			AggregationOptions options = AggregationOptions.builder().allowDiskUse(true).build();
 			cursor = dbCol.aggregate(aggregation, options);
 		}
 		int rs = 0;
@@ -92,12 +88,12 @@ public class MongoDbReadOnlyClientUtility extends
 				result.append(row.toString());
 				rs++;
 
-				//		if ((rs % 5000 == 0) || (rs == 100)) {
+						if ((rs % 5000 == 0) || (rs == 100)) {
 					long t = System.currentTimeMillis();
 				System.out.println(
 						"\t" + rs + " records retrieved from cursor for Q" + qid
 								+ " in " + (t - s) + " ms");
-				//		}
+						}
 			}
 		} else {
 			System.err.println(
@@ -118,6 +114,26 @@ public class MongoDbReadOnlyClientUtility extends
 			}
 			resPw.flush();
 		}
+	}
+
+	private List<String> getBroadcastTable(BasicDBObject query, String collection){
+		List<String> ids = new ArrayList<>();
+		DBCollection dbCol = db.getCollection(collection);
+		if (dbCol == null) {
+			System.err.println(
+					"Collection " + collection + " could not be found");
+		}
+		Cursor cursor = null;
+		long s = System.currentTimeMillis();
+			// retrieve all fields
+			cursor = dbCol.find(query,new BasicDBObject("id",1).append("_id",0));
+		if (cursor != null) {
+			while (cursor.hasNext()) {
+				DBObject row = cursor.next();
+				ids.add((String) row.get("id"));
+			}
+		}
+		return ids;
 	}
 
 	@Override public void init() {
@@ -142,13 +158,19 @@ public class MongoDbReadOnlyClientUtility extends
 
 	@Override public void executeQuery(int qid, int vid, Object q) {
 		MongoQuery query = (MongoQuery) q;
-		if (((MongoQuery) q).isAggregation()) {
+		if (((MongoQuery) q).getType().equals(MongoQuery.QueryType.AGGREGATE)) {
 			runBasicDBObjectQuery(qid,vid, ((MongoQuery) q).getCollection(),
 					null, query.getQuery(),
 					null);
-		} else {
+		} else if (((MongoQuery) q).getType().equals(MongoQuery.QueryType.FIND)) {
+
 			runBasicDBObjectQuery(qid,vid,((MongoQuery) q).getCollection(),
 					query.getQuery().get(0), null, null);
+		}
+		else{
+		     List<String> bTable = getBroadcastTable(query.getInner(),query.getJoinCollections().get(0));
+		     query.setbTable(bTable);
+		     runBasicDBObjectQuery(qid,vid,query.getJoinCollections().get(1),null,query.getOuter(),null);
 		}
 
 	}
