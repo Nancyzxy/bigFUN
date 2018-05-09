@@ -20,11 +20,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.Constants;
 import config.RandomQueryGeneratorConfig;
+import datatype.IArgument;
 import queryGenerator.RandomQueryParameterGenerator;
 import structure.Query;
 import structure.TextualQuery;
@@ -33,11 +35,6 @@ public class ReadOnlyTextQueryWorkloadGenerator extends
         AbstractReadOnlyStringQueryGenerator {
 
     HashMap<Integer, Query> qIxToQuery;
-
-    public ReadOnlyTextQueryWorkloadGenerator(){
-       super();
-       qIxToQuery = new HashMap<>();
-    }
 
     protected void loadQueryTemplate(String qIndexFile) throws IOException {
         qIxToQuery.clear();
@@ -79,6 +76,7 @@ public class ReadOnlyTextQueryWorkloadGenerator extends
     public ReadOnlyTextQueryWorkloadGenerator(String qIndexFile, String
             qGenConfigFile, long seed, long maxUsrId ) {
         super();
+        qIxToQuery = new HashMap<>();
         try {
             loadQueryTemplate(qIndexFile);
         } catch (IOException e) {
@@ -92,6 +90,13 @@ public class ReadOnlyTextQueryWorkloadGenerator extends
             System.err.println("Error in configuring RandomQueryParameterGenerator");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected Query getQuery(int qid, List<IArgument> args) {
+        Query q = qIxToQuery.get(qid);
+        q.setArgs(args);
+        return  q;
     }
 
 }

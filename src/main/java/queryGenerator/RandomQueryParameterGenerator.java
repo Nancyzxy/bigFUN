@@ -82,6 +82,9 @@ public class RandomQueryParameterGenerator {
             case 109: //spatial selection
                 nextQ109(vIx);
                 break;
+            case 110:
+            case 111:
+                 break;
             case 1010: //exact text search
                 nextQ1010(vIx);
                 break;
