@@ -117,6 +117,7 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             ObjectMapper om = new ObjectMapper();
             ObjectNode content = om.createObjectNode();
                 content.put("statement", (String) qBody);
+                content.put("timeout","20m");
             try {
                 builder.setEntity(
                         new StringEntity(om.writeValueAsString(content),
