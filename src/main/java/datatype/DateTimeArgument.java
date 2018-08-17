@@ -78,13 +78,14 @@ public class DateTimeArgument implements IArgument {
         String mi = (min < 10) ? ("0" + min) : ("" + min);
         String s = (sec < 10) ? ("0" + sec) : ("" + sec);
         StringBuffer sb = new StringBuffer("");
+        sb.append("\"");
         sb.append(year).append("-");
         sb.append(mo).append("-");
         sb.append(d);
         sb.append("T");
         sb.append(h).append(":");
         sb.append(mi).append(":");
-        sb.append(s).append("");
+        sb.append(s).append("\"");
         return sb.toString();
     }
 

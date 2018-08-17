@@ -1,0 +1,4 @@
+SELECT VALUE gbu
+FROM ChirpMessages gbu
+WHERE (SOME e IN gbu.employment SATISFIES e.doesnt_exist IS NOT UNKNOWN)
+;
