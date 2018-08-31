@@ -1,0 +1,11 @@
+{
+"100" : "files/queries/analytics/q100.sqlpp",
+"103" : "files/queries/analytics/q103.sqlpp",
+"108" : "files/queries/analytics/q108.sqlpp",
+"110" : "files/queries/analytics/q110.sqlpp",
+"111" : "files/queries/analytics/q111.sqlpp",
+"1014" : "files/queries/analytics/q1014.sqlpp"
+"1014a" : "files/queries/analytics/q1014a.sqlpp"
+"1014_ix" : "files/queries/analytics/q1014_ix.sqlpp"
+"1014a_ix" : "files/queries/analytics/q1014a_ix.sqlpp"
+}

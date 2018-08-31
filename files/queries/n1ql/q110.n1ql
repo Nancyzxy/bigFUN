@@ -1,0 +1,4 @@
+SELECT VALUE gbu
+FROM chirp_messages gbu
+WHERE gbu.employment IS NOT MISSING
+;

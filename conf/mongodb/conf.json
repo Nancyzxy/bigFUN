@@ -1,0 +1,14 @@
+{
+  "clientType": "MongoReadOnly",
+  "cc": "vanadium",
+  "api_port": 8888,
+  "iterations": 10,
+  "ignore_rounds": 0,
+  "seed": 5,
+  "max_gleambookUser_id": 10000200,
+  "stats_file": "results/mongodb.csv",
+  "dumpResults": false,
+  "res_dump_file": "results/mongo_dump.txt",
+  "workload_path": "conf/workload.txt",
+  "query_index_path": "conf/mongodb/query-index.json"
+}

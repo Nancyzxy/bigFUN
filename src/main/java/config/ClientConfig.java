@@ -19,6 +19,7 @@ import asterixUpdateClient.AsterixClientUpdateWorkload;
 import client.AbstractReadOnlyClient;
 import client.AbstractUpdateClient;
 import mongoReadOnlyClient.MongoClientReadOnlyWorkload;
+import n1qlReadOnlyClient.N1QLClientReadOnlyWorkload;
 import structure.UpdateTag;
 
 public class ClientConfig extends AbstractClientConfig {
@@ -27,8 +28,7 @@ public class ClientConfig extends AbstractClientConfig {
         super(clientConfigFile);
     }
 
-    public AbstractReadOnlyClient readReadOnlyAsterixClientConfig(
-            String bigFunHomePath) {
+    public AbstractReadOnlyClient readReadOnlyAsterixClientConfig(String bigFunHomePath) {
         String cc = (String) getParamValue(Constants.CC_URL);
         String httpUser = (String) getParamValue(Constants.USER_NAME);
         String httpPassword = (String) getParamValue(Constants.PASSWORD);
@@ -89,31 +89,27 @@ public class ClientConfig extends AbstractClientConfig {
             resultsFile = (String) getParamValue(Constants.RESULTS_DUMP_FILE);
         }
 
-        AsterixClientReadOnlyWorkload rClient = new AsterixClientReadOnlyWorkload(
-                cc, port, httpUser, httpPassword, dvName, iter, qGenConfigFile,
-                qIxFile, statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile, seed, maxUserId);
+        AsterixClientReadOnlyWorkload rClient = new AsterixClientReadOnlyWorkload(cc, port, httpUser, httpPassword,
+                dvName, iter, qGenConfigFile, qIxFile, statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile,
+                seed, maxUserId);
 
         rClient.setExecQuery(qExec);
         rClient.setDumpResults(dumpResults);
         return rClient;
     }
 
-    public AbstractReadOnlyClient readReadOnlyMongoClientConfig(
-            String bigFunHomePath) {
-        String host = (String) getParamValue(Constants.CC_URL);
-        String user = (String) getParamValue(Constants.USER_NAME);
-        String password = (String) getParamValue(Constants.PASSWORD);
+    public AbstractReadOnlyClient readReadOnlyN1QLClientConfig(String bigFunHomePath) {
+        String cc = (String) getParamValue(Constants.CC_URL);
+        String httpUser = (String) getParamValue(Constants.USER_NAME);
+        String httpPassword = (String) getParamValue(Constants.PASSWORD);
         int port = (Integer) getParamValue(Constants.PORT_NUM);
-        String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
         int iter = (int) getParamValue(Constants.ITERATIONS);
 
-        String qGenConfigFile =
-                bigFunHomePath + "/files/" + Constants.Q_GEN_CONFIG_FILE_NAME;
-        String workloadFile =
-                bigFunHomePath + "/files/" + Constants.WORKLOAD_FILE_NAME;
+        String qIxFile = bigFunHomePath + "/files/" + Constants.Q_IX_FILE_NAME;
+        String qGenConfigFile = bigFunHomePath + "/files/" + Constants.Q_GEN_CONFIG_FILE_NAME;
+        String workloadFile = bigFunHomePath + "/files/" + Constants.WORKLOAD_FILE_NAME;
 
-        String statsFile =
-                bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
+        String statsFile = bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
         if (isParamSet(Constants.STATS_FILE)) {
             statsFile = (String) getParamValue(Constants.STATS_FILE);
         }
@@ -126,8 +122,7 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 seed = ((Integer) value).longValue();
             } else {
-                System.err.println("WARNING: Invalid Seed value in "
-                        + Constants.BIGFUN_CONFIG_FILE_NAME
+                System.err.println("WARNING: Invalid Seed value in " + Constants.BIGFUN_CONFIG_FILE_NAME
                         + " . Using default seed value for the generator.");
             }
 
@@ -141,11 +136,8 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 maxUserId = ((Integer) value).longValue();
             } else {
-                System.err.println(
-                        "WARNING: Invalid " + Constants.MAX_GBOOK_USR_ID
-                                + " value in "
-                                + Constants.BIGFUN_CONFIG_FILE_NAME
-                                + " . Using the default value for the generator.");
+                System.err.println("WARNING: Invalid " + Constants.MAX_GBOOK_USR_ID + " value in "
+                        + Constants.BIGFUN_CONFIG_FILE_NAME + " . Using the default value for the generator.");
             }
         }
 
@@ -166,18 +158,84 @@ public class ClientConfig extends AbstractClientConfig {
             resultsFile = (String) getParamValue(Constants.RESULTS_DUMP_FILE);
         }
 
-        MongoClientReadOnlyWorkload rClient = new MongoClientReadOnlyWorkload(
-                host, port, user, password, dvName, iter, qGenConfigFile,
-                statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile,
-                seed, maxUserId);
+        N1QLClientReadOnlyWorkload rClient = new N1QLClientReadOnlyWorkload(cc, port, httpUser, httpPassword, iter,
+                qGenConfigFile, qIxFile, statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile, seed,
+                maxUserId);
 
         rClient.setExecQuery(qExec);
         rClient.setDumpResults(dumpResults);
         return rClient;
     }
 
-    @Override
-    public AbstractUpdateClient readUpdateClientConfig(String bigFunHomePath) {
+    public AbstractReadOnlyClient readReadOnlyMongoClientConfig(String bigFunHomePath) {
+        String host = (String) getParamValue(Constants.CC_URL);
+        String user = (String) getParamValue(Constants.USER_NAME);
+        String password = (String) getParamValue(Constants.PASSWORD);
+        int port = (Integer) getParamValue(Constants.PORT_NUM);
+        String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
+        int iter = (int) getParamValue(Constants.ITERATIONS);
+
+        String qGenConfigFile = bigFunHomePath + "/files/" + Constants.Q_GEN_CONFIG_FILE_NAME;
+        String workloadFile = bigFunHomePath + "/files/" + Constants.WORKLOAD_FILE_NAME;
+
+        String statsFile = bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
+        if (isParamSet(Constants.STATS_FILE)) {
+            statsFile = (String) getParamValue(Constants.STATS_FILE);
+        }
+
+        long seed = Constants.DEFAULT_SEED;
+        if (isParamSet(Constants.SEED)) {
+            Object value = getParamValue(Constants.SEED);
+            if (value instanceof Long) {
+                seed = (long) value;
+            } else if (value instanceof Integer) {
+                seed = ((Integer) value).longValue();
+            } else {
+                System.err.println("WARNING: Invalid Seed value in " + Constants.BIGFUN_CONFIG_FILE_NAME
+                        + " . Using default seed value for the generator.");
+            }
+
+        }
+
+        long maxUserId = Constants.DEFAULT_MAX_GBOOK_USR_ID;
+        if (isParamSet(Constants.MAX_GBOOK_USR_ID)) {
+            Object value = getParamValue(Constants.MAX_GBOOK_USR_ID);
+            if (value instanceof Long) {
+                maxUserId = (long) value;
+            } else if (value instanceof Integer) {
+                maxUserId = ((Integer) value).longValue();
+            } else {
+                System.err.println("WARNING: Invalid " + Constants.MAX_GBOOK_USR_ID + " value in "
+                        + Constants.BIGFUN_CONFIG_FILE_NAME + " . Using the default value for the generator.");
+            }
+        }
+
+        int ignore = -1;
+        if (isParamSet(Constants.IGNORE)) {
+            ignore = (int) getParamValue(Constants.IGNORE);
+        }
+
+        boolean qExec = true;
+        if (isParamSet(Constants.EXECUTE_QUERY)) {
+            qExec = (boolean) getParamValue(Constants.EXECUTE_QUERY);
+        }
+
+        boolean dumpResults = false;
+        String resultsFile = null;
+        if (isParamSet(Constants.ASTX_DUMP_RESULTS)) {
+            dumpResults = (boolean) getParamValue(Constants.ASTX_DUMP_RESULTS);
+            resultsFile = (String) getParamValue(Constants.RESULTS_DUMP_FILE);
+        }
+
+        MongoClientReadOnlyWorkload rClient = new MongoClientReadOnlyWorkload(host, port, user, password, dvName, iter,
+                qGenConfigFile, statsFile, ignore, workloadFile, /*dumpDirFile,*/ resultsFile, seed, maxUserId);
+
+        rClient.setExecQuery(qExec);
+        rClient.setDumpResults(dumpResults);
+        return rClient;
+    }
+
+    @Override public AbstractUpdateClient readUpdateClientConfig(String bigFunHomePath) {
         String cc = (String) getParamValue(Constants.CC_URL);
         int port = (Integer) getParamValue(Constants.PORT_NUM);
         String oprType = (String) getParamValue(Constants.UPDATE_OPR_TYPE_TAG);
@@ -215,9 +273,7 @@ public class ClientConfig extends AbstractClientConfig {
             return null;
         }
 
-        return new AsterixClientUpdateWorkload(cc, port, dvName, dsName,
-                keyName,
-                upTag, batchSize, limit, updatesFile,
+        return new AsterixClientUpdateWorkload(cc, port, dvName, dsName, keyName, upTag, batchSize, limit, updatesFile,
                 statsFile, ignore);
     }
 }

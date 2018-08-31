@@ -33,12 +33,15 @@ public class StatsCollector {
     HashMap<Pair, QueryStat> qvToStat;
     String statsFile; //the file to eventually dump final results into
     int counter; //for tracing purpose only
+    long s;
+    long e;
 
     public StatsCollector(String statsFile, int ignore) {
         this.qvToStat = new HashMap<Pair, QueryStat>();
         this.statsFile = statsFile;
         this.ignore = ignore;
         this.counter = 0;
+        s = System.currentTimeMillis();
     }
 
     public void reset() {
@@ -59,17 +62,13 @@ public class StatsCollector {
 
     private void partialReport(int startRound, int endRound, String fileName) {
         try {
+            long e = System.currentTimeMillis();
             PrintWriter pw = new PrintWriter(new File(fileName));
             if (startRound != 0) {
                 ignore = -1;
             }
-            DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-            Date dateobj = new Date();
-            String currentTime = df.format(dateobj);
             StringBuffer tsb = new StringBuffer();
-            tsb.append("Response Times (in ms per iteration)\n");
-            StringBuffer avgsb = new StringBuffer(currentTime);
-            avgsb.append("\n\nAvg Times (first " + ignore + " round(s) excluded)\n");
+            tsb.append(s).append(", ").append(e).append("\n");
             Set<Pair> keys = qvToStat.keySet();
             Pair[] qvs = keys.toArray(new Pair[keys.size()]);
             Arrays.sort(qvs);
@@ -77,14 +76,6 @@ public class StatsCollector {
                 QueryStat qs = qvToStat.get(p);
                 tsb.append("Q").append(p.toString()).append("\t").append(qs.getTimes()).append("\n");
                 double partialAvg = -1;
-                if (avgsb != null) {
-                    partialAvg = qs.getAverageRT(ignore);
-                    avgsb.append("Q").append(p.toString()).append("\t").append(partialAvg).append("\n");
-                }
-            }
-            if (avgsb != null) {
-                pw.println(avgsb.toString());
-                pw.println("\n");
             }
             pw.println(tsb.toString());
             pw.close();

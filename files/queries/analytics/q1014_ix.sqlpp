@@ -1,6 +1,6 @@
 SELECT META(user).id AS id, COUNT(*) AS count
 FROM `gleambook_users` user, `gleam_messages` msg
-WHERE msg.author_id = TO_STRING(META(user).id)
+WHERE msg.author_id /*+ indexnl */ = TO_STRING(META(user).id)
 AND user.user_since >= 
 @PARAM
 AND user.user_since < 

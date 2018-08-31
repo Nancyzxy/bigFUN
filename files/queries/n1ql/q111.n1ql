@@ -1,0 +1,5 @@
+SELECT DISTINCT 1 FROM (
+SELECT *
+FROM chirp_messages usr
+ORDER BY send_time ) AS foo
+;

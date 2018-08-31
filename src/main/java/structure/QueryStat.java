@@ -57,9 +57,10 @@ public class QueryStat {
 
     public String getTimes() {
         StringBuffer sb = new StringBuffer();
-        for (long t : times) {
-            sb.append(t + "\t");
+        for (int i=0; i<times.size()-2;i++) {
+            sb.append(times.get(i) + ",");
         }
+        sb.append(times.get(times.size()-1));
         return sb.toString();
     }
 

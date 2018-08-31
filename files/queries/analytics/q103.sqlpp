@@ -1,5 +1,5 @@
 SELECT VALUE user
-FROM GleambookUsers user
+FROM `gleambook_users` user
 WHERE user.user_since >= 
 @PARAM
 AND user.user_since <= 

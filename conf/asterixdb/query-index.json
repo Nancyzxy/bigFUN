@@ -1,0 +1,11 @@
+{
+"100" : "files/queries/asterixdb/q103.sqlpp",
+"103" : "files/queries/asterixdb/q103.sqlpp",
+"108" : "files/queries/asterixdb/q108.sqlpp",
+"110" : "files/queries/asterixdb/q110.sqlpp",
+"111" : "files/queries/asterixdb/q111.sqlpp",
+"1014" : "files/queries/asterixdb/q1014.sqlpp"
+"1014a" : "files/queries/asterixdb/q1014a.sqlpp"
+"1014_ix" : "files/queries/asterixdb/q1014_ix.sqlpp"
+"1014a_ix" : "files/queries/asterixdb/q1014a_ix.sqlpp"
+}

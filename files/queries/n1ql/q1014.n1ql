@@ -1,0 +1,19 @@
+SELECT usr.id , COUNT(*) as count
+FROM gleam_messages AS msg
+JOIN gleam_users usr
+ON KEYS [msg.author_id]
+WHERE str_to_millis(msg.send_time) BETWEEN
+str_to_millis(
+@PARAM
+) AND
+str_to_millis(
+@PARAM
+) AND str_to_millis(usr.user_since) BETWEEN
+str_to_millis(
+@PARAM
+) AND
+str_to_millis(
+@PARAM
+)
+GROUP BY usr.id
+;

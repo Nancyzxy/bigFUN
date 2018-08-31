@@ -1,5 +1,5 @@
 SELECT uname, a
-FROM ChirpMessages cm
+FROM `chirp_messages` cm
 WHERE cm.send_time >=
 @PARAM
 AND cm.send_time <

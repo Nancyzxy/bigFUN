@@ -21,7 +21,7 @@ import config.Constants;
 
 public class Driver {
     public static void main(String[] args) {
-        if (args.length != 1) {
+        if (args.length < 1) {
             System.out.println("Correct Usage:\n");
             System.out.println("\t[0]: BigFUN home has to be set to a valid path.");
             return;
@@ -29,7 +29,13 @@ public class Driver {
 
         String bigFunHome = args[0];
         bigFunHome = bigFunHome.replaceAll("/$", "");
-        String clientConfigFile = bigFunHome + "/conf/bigfun-conf.json";
+        String clientConfigFile;
+        if(args.length > 1){
+            clientConfigFile = args[1];
+        }
+        else {
+            clientConfigFile = bigFunHome + "/conf/n1ql_conf.json";
+        }
         ClientConfig clientConfig = new ClientConfig(clientConfigFile);
         clientConfig.parseConfigFile();
         if (!clientConfig.isParamSet(Constants.CLIENT_TYPE)) {
@@ -47,6 +53,9 @@ public class Driver {
                 break;
             case Constants.MONGO_RANDOM_CLIENT_TAG:
                 client = clientConfig.readReadOnlyMongoClientConfig(bigFunHome);
+                break;
+            case Constants.N1QL_RANDOM_CLIENT_TAG:
+                client = clientConfig.readReadOnlyN1QLClientConfig(bigFunHome);
                 break;
 
             default:

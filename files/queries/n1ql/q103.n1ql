@@ -1,0 +1,9 @@
+SELECT ELEMENT usr
+FROM gleam_users usr
+WHERE str_to_millis(usr.user_since) BETWEEN
+str_to_millis(
+@PARAM
+) AND
+str_to_millis(
+@PARAM
+);

@@ -1,0 +1,9 @@
+select avg(length(message_text))
+from chirp_messages
+use index(idxchirp using gsi)
+where str_to_millis(send_time) between 
+str_to_millis(
+@PARAM
+) and str_to_millis(
+@PARAM
+);

@@ -62,6 +62,6 @@ public class Pair implements Comparable<Pair> {
     }
 
     public String toString() {
-        return "(" + qid + ", " + vid + ")";
+        return "(" + qid + ". " + vid + ")";
     }
 }

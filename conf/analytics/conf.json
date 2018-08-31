@@ -1,0 +1,16 @@
+{
+  "clientType": "AsterixdbReadOnly",
+  "cc": "vanadium",
+  "http_user": "imaxon",
+  "http_passwd": "asdfgh",
+  "api_port": 8095,
+  "iterations": 10,
+  "ignore_rounds": 0,
+  "seed": 5,
+  "max_gleambookUser_id": 10000200,
+  "stats_file": "conf/analytics/stats.csv",
+  "dumpResults": false,
+  "res_dump_file": "conf/analytics/results.txt",
+  "workload_path": "conf/workload.txt",
+  "query_index_path": "conf/analytics/query-index.json"
+}

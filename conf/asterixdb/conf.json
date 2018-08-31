@@ -1,0 +1,14 @@
+{
+  "clientType": "AsterixdbReadOnly",
+  "cc": "vanadium",
+  "api_port": 19001,
+  "iterations": 10,
+  "ignore_rounds": 0,
+  "seed": 5,
+  "max_gleambookUser_id": 10000200,
+  "stats_file": "conf/asterixdb/stats.csv",
+  "dumpResults": false,
+  "res_dump_file": "conf/asterixdb/res.txt",
+  "workload_path": "conf/workload.txt",
+  "query_index_path": "conf/asterixdb/query-index.json"
+}
