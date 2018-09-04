@@ -29,14 +29,6 @@ curl -s -X POST -u $USER:$PASS -d "name=$BUCKET" -d 'ramQuotaMB=256'0 -d 'authTy
 
 sleep 10
 
-echo -e "Loading BigFUN data to KV"
-#load to kv
-$CBIMPORT_PATH/cbimport json -f lines -c $HOST:9000 -u $USER -p $PASS -b $BUCKET -g chirpid::%chirpid% -d file://$DATA_PATH/chirp_messages.json
-$CBIMPORT_PATH/cbimport json -f lines -c $HOST:9000 -u $USER -p $PASS -b $BUCKET -g id::%id% -d file://$DATA_PATH/gbook_users.json
-$CBIMPORT_PATH/cbimport json -f lines -c $HOST:9000 -u $USER -p $PASS -b $BUCKET -g message_id::%message_id% -d file://$DATA_PATH/gbook_messages.json
-
-COUNT=$(ls $DATA_PATH/*.json | xargs wc -l | grep total | cut -d' ' -f4)
-echo -e "Loaded $COUNT rows to KV bucket $BUCKET"
 echo -e "Creating shadow datasets and indexes"
 
 curl -s -u $USER:$PASS -d "CREATE BUCKET $BUCKET;" http://$HOST:8095/query/service > /dev/null
@@ -49,17 +41,4 @@ curl -s -u $USER:$PASS -d "CREATE INDEX usrSinceIdx ON \`GleambookUsers\`(user_s
 
 echo -e "Connecting KV bucket $BUCKET to Analytics shadow"
 curl -s -u $USER:$PASS -d "CONNECT BUCKET $BUCKET" http://$HOST:8095/query/service > /dev/null
-
-BUCKET_COUNT=0
-
-echo -e "Waiting for Analytics shadow to catch up to KV"
-while [ $BUCKET_COUNT -lt $COUNT ]
-do
-COUNTMSG=$(curl -s -u couchbase:couchbase -d "SELECT COUNT(*) AS count FROM GleambookMessages;" http://localhost:8095/query/service | python3 -c "import sys, json; print(json.load(sys.stdin)['results'][0]['count'])")
-COUNTUSER=$(curl -s -u couchbase:couchbase -d "SELECT COUNT(*) AS count FROM GleambookUsers;" http://localhost:8095/query/service | python3 -c "import sys, json; print(json.load(sys.stdin)['results'][0]['count'])")
-COUNTCHIRP=$(curl -s -u couchbase:couchbase -d "SELECT COUNT(*) AS count FROM ChirpMessages;" http://localhost:8095/query/service | python3 -c "import sys, json; print(json.load(sys.stdin)['results'][0]['count'])")
-BUCKET_COUNT=$(($COUNTMSG + $COUNTUSER + $COUNTCHIRP))
-echo -e "Analytics row count: $BUCKET_COUNT"
-sleep 1
-done
 

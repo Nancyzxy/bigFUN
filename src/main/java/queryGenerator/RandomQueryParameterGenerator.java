@@ -54,7 +54,8 @@ public class RandomQueryParameterGenerator {
     public List<IArgument> nextQuery(int qIx, int vIx) {
         args.clear();
         switch (qIx) {
-
+            case 100: //PK lookup
+                nextQ101();
             case 101: //PK lookup
                 nextQ101();
                 break;
