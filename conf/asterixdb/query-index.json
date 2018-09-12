@@ -4,8 +4,8 @@
 "108" : "files/queries/asterixdb/q108.sqlpp",
 "110" : "files/queries/asterixdb/q110.sqlpp",
 "111" : "files/queries/asterixdb/q111.sqlpp",
-"1014" : "files/queries/asterixdb/q1014.sqlpp"
-"1014a" : "files/queries/asterixdb/q1014a.sqlpp"
-"1014_ix" : "files/queries/asterixdb/q1014_ix.sqlpp"
-"1014a_ix" : "files/queries/asterixdb/q1014a_ix.sqlpp"
+"1014" : "files/queries/asterixdb/q1014.sqlpp",
+"1015" : "files/queries/asterixdb/q1015.sqlpp",
+"1016" : "files/queries/asterixdb/q1016.sqlpp",
+"1017" : "files/queries/asterixdb/q1017.sqlpp"
 }

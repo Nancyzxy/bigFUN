@@ -36,14 +36,11 @@ public class ClientConfig extends AbstractClientConfig {
         String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
         int iter = (int) getParamValue(Constants.ITERATIONS);
 
-        String qIxFile = bigFunHomePath + "/files/" + Constants.Q_IX_FILE_NAME;
-        String qGenConfigFile = bigFunHomePath + "/files/" + Constants.Q_GEN_CONFIG_FILE_NAME;
-        String workloadFile = bigFunHomePath + "/files/" + Constants.WORKLOAD_FILE_NAME;
+        String qIxFile = (String) getParamValue(Constants.QUERY_INDEX_PATH);
+        String qGenConfigFile = (String) getParamValue(Constants.QUERY_PARAMS);
+        String workloadFile = (String) getParamValue(Constants.WORKLOAD_PATH);
 
-        String statsFile = bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
-        if (isParamSet(Constants.STATS_FILE)) {
-            statsFile = (String) getParamValue(Constants.STATS_FILE);
-        }
+        String statsFile = (String) getParamValue(Constants.STATS_FILE);
 
         long seed = Constants.DEFAULT_SEED;
         if (isParamSet(Constants.SEED)) {
@@ -53,7 +50,7 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 seed = ((Integer) value).longValue();
             } else {
-                System.err.println("WARNING: Invalid Seed value in " + Constants.BIGFUN_CONFIG_FILE_NAME
+                System.err.println("WARNING: Invalid Seed value in config"
                         + " . Using default seed value for the generator.");
             }
 
@@ -68,7 +65,7 @@ public class ClientConfig extends AbstractClientConfig {
                 maxUserId = ((Integer) value).longValue();
             } else {
                 System.err.println("WARNING: Invalid " + Constants.MAX_GBOOK_USR_ID + " value in "
-                        + Constants.BIGFUN_CONFIG_FILE_NAME + " . Using the default value for the generator.");
+                        + "config . Using the default value for the generator.");
             }
         }
 
@@ -105,11 +102,11 @@ public class ClientConfig extends AbstractClientConfig {
         int port = (Integer) getParamValue(Constants.PORT_NUM);
         int iter = (int) getParamValue(Constants.ITERATIONS);
 
-        String qIxFile = bigFunHomePath + "/files/" + Constants.Q_IX_FILE_NAME;
-        String qGenConfigFile = bigFunHomePath + "/files/" + Constants.Q_GEN_CONFIG_FILE_NAME;
-        String workloadFile = bigFunHomePath + "/files/" + Constants.WORKLOAD_FILE_NAME;
+        String qIxFile = (String) getParamValue(Constants.QUERY_INDEX_PATH);
+        String qGenConfigFile = (String) getParamValue(Constants.QUERY_INDEX_PATH);
+        String workloadFile = (String) getParamValue(Constants.WORKLOAD_PATH);
 
-        String statsFile = bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
+        String statsFile = (String) getParamValue(Constants.STATS_FILE);
         if (isParamSet(Constants.STATS_FILE)) {
             statsFile = (String) getParamValue(Constants.STATS_FILE);
         }
@@ -122,8 +119,6 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 seed = ((Integer) value).longValue();
             } else {
-                System.err.println("WARNING: Invalid Seed value in " + Constants.BIGFUN_CONFIG_FILE_NAME
-                        + " . Using default seed value for the generator.");
             }
 
         }
@@ -136,8 +131,6 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 maxUserId = ((Integer) value).longValue();
             } else {
-                System.err.println("WARNING: Invalid " + Constants.MAX_GBOOK_USR_ID + " value in "
-                        + Constants.BIGFUN_CONFIG_FILE_NAME + " . Using the default value for the generator.");
             }
         }
 
@@ -175,13 +168,11 @@ public class ClientConfig extends AbstractClientConfig {
         String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
         int iter = (int) getParamValue(Constants.ITERATIONS);
 
-        String qGenConfigFile = bigFunHomePath + "/files/" + Constants.Q_GEN_CONFIG_FILE_NAME;
-        String workloadFile = bigFunHomePath + "/files/" + Constants.WORKLOAD_FILE_NAME;
+        String qIxFile = (String) getParamValue(Constants.QUERY_INDEX_PATH);
+        String qGenConfigFile = (String) getParamValue(Constants.QUERY_INDEX_PATH);
+        String workloadFile = (String) getParamValue(Constants.WORKLOAD_PATH);
 
-        String statsFile = bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
-        if (isParamSet(Constants.STATS_FILE)) {
-            statsFile = (String) getParamValue(Constants.STATS_FILE);
-        }
+        String statsFile = (String) getParamValue(Constants.STATS_FILE);
 
         long seed = Constants.DEFAULT_SEED;
         if (isParamSet(Constants.SEED)) {
@@ -191,8 +182,6 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 seed = ((Integer) value).longValue();
             } else {
-                System.err.println("WARNING: Invalid Seed value in " + Constants.BIGFUN_CONFIG_FILE_NAME
-                        + " . Using default seed value for the generator.");
             }
 
         }
@@ -205,8 +194,6 @@ public class ClientConfig extends AbstractClientConfig {
             } else if (value instanceof Integer) {
                 maxUserId = ((Integer) value).longValue();
             } else {
-                System.err.println("WARNING: Invalid " + Constants.MAX_GBOOK_USR_ID + " value in "
-                        + Constants.BIGFUN_CONFIG_FILE_NAME + " . Using the default value for the generator.");
             }
         }
 
@@ -241,7 +228,7 @@ public class ClientConfig extends AbstractClientConfig {
         String oprType = (String) getParamValue(Constants.UPDATE_OPR_TYPE_TAG);
 
         String updatesFile = (String) getParamValue(Constants.UPDATES_FILE);
-        String statsFile = bigFunHomePath + "/files/output/" + Constants.STATS_FILE_NAME;
+        String statsFile = "";
         if (isParamSet(Constants.STATS_FILE)) {
             statsFile = (String) getParamValue(Constants.STATS_FILE);
         }

@@ -52,3 +52,10 @@ target
 
 #IDEA
 *.iml
+
+*.dump
+*.csv
+*.params
+*.index
+workload
+

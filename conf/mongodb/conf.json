@@ -8,7 +8,8 @@
   "max_gleambookUser_id": 10000200,
   "stats_file": "results/mongodb.csv",
   "dumpResults": false,
-  "res_dump_file": "results/mongo_dump.txt",
-  "workload_path": "conf/workload.txt",
+  "res_dump_file": "results/mongo.dump",
+  "workload_path": "conf/workload",
+  "params": "conf/query-params",
   "query_index_path": "conf/mongodb/query-index.json"
 }

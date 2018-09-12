@@ -55,7 +55,8 @@ public class RandomQueryParameterGenerator {
         args.clear();
         switch (qIx) {
             case 100: //PK lookup
-                nextQ101();
+                nextQ100();
+                break;
             case 101: //PK lookup
                 nextQ101();
                 break;
@@ -106,15 +107,21 @@ public class RandomQueryParameterGenerator {
                 break;
             case 1015: //join and top-k
             case 2015: //IX-join and top-k
-                nextQ1015(qIx, vIx);
+                nextQ1014(qIx, vIx);
                 break;
             case 1016: //spatial Join
-                nextQ1016(qIx, vIx);
+                nextQ1014(qIx, vIx);
+                break;
+            case 1017: //spatial Join
+                nextQ1014(qIx, vIx);
                 break;
             default:
                 return null;
         }
         return (new ArrayList<IArgument>(args));
+    }
+
+    private void nextQ100() {
     }
 
     private void nextQ101() {

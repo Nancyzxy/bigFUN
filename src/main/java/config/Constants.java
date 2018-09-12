@@ -36,6 +36,9 @@ public class Constants {
     public static final String UPDATE_LIMIT = "limit";
     public static final String STATS_FILE = "stats_file";
     public static final String RESULTS_DUMP_FILE = "res_dump_file";
+    public static final String WORKLOAD_PATH = "workload_path";
+    public static final String QUERY_INDEX_PATH = "query_index_path";
+    public static final String QUERY_PARAMS = "params";
     public static final String UPDATES_FILE = "updates_file";
     public static final int INSERT_QIX = 18;
     public static final int DELETE_QIX = 19;
@@ -67,9 +70,6 @@ public class Constants {
     public static final String DEFAULT_END_DATE = "2014-05-29-23-59-59";
     public static final long DEFAULT_MAX_GBOOK_USR_ID = 10000L;
     public static final long DEFAULT_SEED = 10L;
-    public static final String BIGFUN_CONFIG_FILE_NAME = "n1ql_conf.json";
-    public static final String Q_IX_FILE_NAME = "query-index.json";
     public static final String WORKLOAD_FILE_NAME = "workload.txt";
-    public static final String STATS_FILE_NAME = "stats.txt";
     public static final String Q_GEN_CONFIG_FILE_NAME = "query-params.txt";
 }
