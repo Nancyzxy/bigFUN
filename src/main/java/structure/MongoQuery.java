@@ -11,7 +11,8 @@ public class MongoQuery implements Query{
     public enum QueryType{
         FIND,
         AGGREGATE,
-        CLIENT_JOIN
+        CLIENT_JOIN,
+        IDENT
     }
     List<BasicDBObject> query;
     BasicDBObject inner;

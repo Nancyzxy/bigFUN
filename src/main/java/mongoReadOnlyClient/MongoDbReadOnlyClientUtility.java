@@ -58,7 +58,28 @@ public class MongoDbReadOnlyClientUtility extends
 
 	}
 
-	//range scan on a temporal attribute
+	private void getOne(String collection) {
+		StringBuilder result = new StringBuilder();
+		DBCollection dbCol = db.getCollection(collection);
+		if (dbCol == null) {
+			System.err.println(
+					"Collection " + collection + " could not be found");
+		}
+		DBObject cursor = null;
+		long s = System.currentTimeMillis();
+		cursor = dbCol.findOne();
+		int rs = 0;
+		long e = System.currentTimeMillis();
+		long rspTime = (e - s);
+		updateStat(100, 4, rspTime);
+		if (resPw != null) {
+			resPw.println(100);
+			if (dumpResults) {
+				resPw.print('\n');
+			}
+			resPw.flush();
+		}
+	}
 
 	//used for running queries that consists of a BasicDBObject
 	private void runBasicDBObjectQuery(int qid, int vid, String collection,
@@ -158,7 +179,10 @@ public class MongoDbReadOnlyClientUtility extends
 
 	@Override public void executeQuery(int qid, int vid, Object q) {
 		MongoQuery query = (MongoQuery) q;
-		if (((MongoQuery) q).getType().equals(MongoQuery.QueryType.AGGREGATE)) {
+		if (((MongoQuery) q).getType().equals(MongoQuery.QueryType.IDENT)) {
+			getOne(((MongoQuery) q).getCollection());
+        }
+		else if (((MongoQuery) q).getType().equals(MongoQuery.QueryType.AGGREGATE)) {
 			runBasicDBObjectQuery(qid,vid, ((MongoQuery) q).getCollection(),
 					null, query.getQuery(),
 					null);

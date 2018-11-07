@@ -74,6 +74,7 @@ public abstract class AbstractReadOnlyClientUtility extends AbstractClientUtilit
         return qIndexFile;
     }
 
+    @Override
     public String getQGenConfigFile() {
         return qGenConfigFile;
     }

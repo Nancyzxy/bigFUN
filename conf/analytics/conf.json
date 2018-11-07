@@ -12,5 +12,6 @@
   "dumpResults": false,
   "res_dump_file": "conf/analytics/results.txt",
   "workload_path": "conf/workload.txt",
-  "query_index_path": "conf/analytics/query-index.json"
+  "query_index_path": "conf/analytics/query-index.json",
+  "params": "conf/analytics/query-params"
 }

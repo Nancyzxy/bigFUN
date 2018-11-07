@@ -40,6 +40,9 @@ public class ReadOnlyMongoQueryWorkloadGenerator
 
         switch (qid) {
 
+            case 100:
+                q.setQuery(null,MongoQuery.QueryType.IDENT,"gleam_users");
+                break;
             case 103:
                 q.setQuery(Arrays.asList(
                         scanTemporalRange(dateArgs.get(0), dateArgs.get(1))),
