@@ -79,10 +79,9 @@ public class RandomQueryParameterGenerator {
                 nextQ107(qIx, vIx);
                 break;
             case 108: //top-k
+            case 109: //top-k
+            case 119: //top-k
                 nextQ108(qIx, vIx);
-                break;
-            case 109: //spatial selection
-                nextQ109(vIx);
                 break;
             case 110:
             case 111:

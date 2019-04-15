@@ -1,8 +1,8 @@
 {
   "clientType": "MongoReadOnly",
-  "cc": "oceanus1",
+  "cc": "scandium",
   "api_port": 8888,
-  "iterations": 1,
+  "iterations": 10,
   "ignore_rounds": 0,
   "seed": 5,
   "max_gleambookUser_id": 10000200,

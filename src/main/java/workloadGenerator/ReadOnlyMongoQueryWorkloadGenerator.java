@@ -59,6 +59,15 @@ public class ReadOnlyMongoQueryWorkloadGenerator
                 q.setQuery(groupedAggregation(dateArgs.get(0), dateArgs.get(1)),
                         MongoQuery.QueryType.AGGREGATE, "chirp_messages");
                 break;
+
+            case 109:
+                q.setQuery(aggTest(dateArgs.get(0), dateArgs.get(1)),
+                        MongoQuery.QueryType.AGGREGATE, "chirp_messages");
+                break;
+            case 119:
+                q.setQuery(aggTestCt(dateArgs.get(0), dateArgs.get(1)),
+                        MongoQuery.QueryType.AGGREGATE, "chirp_messages");
+                break;
             case 110:
                 q.setQuery(Arrays.asList(scan()), MongoQuery.QueryType.FIND, "chirp_messages");
                 break;
@@ -138,6 +147,44 @@ public class ReadOnlyMongoQueryWorkloadGenerator
 
                 );
 
+        return query;
+
+    }
+
+    private List<BasicDBObject> aggTest(DateTimeArgument sDate,
+            DateTimeArgument eDate) {
+        List<BasicDBObject> query =
+                Arrays.asList(
+                        new BasicDBObject("$match",
+                                new BasicDBObject("send_time",
+                                        new BasicDBObject(
+                                                "$gte",
+                                                sDate.toJSON()).append("$lt", eDate.toJSON())
+
+                                ).append("uname", new BasicDBObject("$regex","Trump"))),
+                        new BasicDBObject("$limit", 10), new BasicDBObject("$project",
+                                new BasicDBObject("_id", 0).append("name", "$uname")
+
+                        ));
+        return query;
+
+    }
+
+    private List<BasicDBObject> aggTestCt(DateTimeArgument sDate,
+            DateTimeArgument eDate) {
+        List<BasicDBObject> query =
+                Arrays.asList(
+                        new BasicDBObject("$match",
+                                new BasicDBObject("send_time",
+                                        new BasicDBObject(
+                                                "$gte",
+                                                sDate.toJSON()).append("$lt", eDate.toJSON())
+
+                                ).append("uname", new BasicDBObject("$regex","Trump"))),
+                        new BasicDBObject("$limit", 10), new BasicDBObject("$project",
+                                new BasicDBObject("_id", 0).append("name", "$uname")
+
+                        ),new BasicDBObject("$count","ct"));
         return query;
 
     }
