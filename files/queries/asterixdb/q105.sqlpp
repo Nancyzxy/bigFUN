@@ -1,6 +1,6 @@
 SELECT VALUE gbu
 FROM GleambookUsers gbu
-WHERE (SOME e IN gbu.employment SATISFIES e.end_date IS UNKNOWN)
+WHERE (EVERY e IN gbu.employment SATISFIES e.end_date IS NOT UNKNOWN)
 AND gbu.user_since >= 
 DATETIME(
 @PARAM

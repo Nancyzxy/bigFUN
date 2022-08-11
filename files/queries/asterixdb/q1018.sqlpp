@@ -1,0 +1,11 @@
+select count(*) as cnt ,sentiment(cm.message_text) as sentiment from ChirpMessages cm 
+where 
+cm.send_time >=
+DATETIME(
+@PARAM
+)
+AND cm.send_time <
+DATETIME(
+@PARAM
+)
+group by sentiment(cm.message_text);

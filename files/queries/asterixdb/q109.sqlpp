@@ -1,0 +1,21 @@
+from ChirpMessages cm 
+let po =st_geom_from_text("POLYGON((
+@PARAM 
+@PARAM
+,
+@PARAM 
+@PARAM
+,
+@PARAM 
+@PARAM
+,
+@PARAM 
+@PARAM
+,
+@PARAM 
+@PARAM
+))"
+)where 
+ST_INTERSECTS(cm.sender_location, po)
+SELECT cm.user.name,message_text 
+;

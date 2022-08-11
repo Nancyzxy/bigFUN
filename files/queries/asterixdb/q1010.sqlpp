@@ -1,0 +1,6 @@
+select cm from ChirpMessages cm
+where contains(cm.message_text, 
+@PARAM
+)order by cm.send_time desc
+limit 10 
+;

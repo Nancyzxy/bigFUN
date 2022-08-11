@@ -1,0 +1,10 @@
+SELECT value AVG(LENGTH(cm.message_text))
+FROM ChirpMessages cm
+WHERE cm.send_time >=
+DATETIME(
+@PARAM
+)
+AND cm.send_time <
+DATETIME(
+@PARAM
+);

@@ -1,0 +1,23 @@
+select  gbm.message , gbu.name from GleambookMessages gbm,GleambookUsers gbu
+where gbm.author_id /*+ indexnl */= gbu.id 
+and
+gbm.send_time >=
+DATETIME(
+@PARAM
+)
+and
+gbm.send_time <
+DATETIME(
+@PARAM
+)
+and
+gbu.user_since >= 
+DATETIME(
+@PARAM
+)
+and
+gbu.user_since <
+DATETIME(
+@PARAM
+)
+;

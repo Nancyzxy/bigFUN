@@ -1,13 +1,12 @@
-SELECT user.id AS id, COUNT(*) AS count
-FROM GleambookUsers user, GleambookMessages msg
-WHERE user.id /*+ indexnl */ = msg.author_id
-AND user.user_since >= 
+select sentiment(cm.message_text)= 
 @PARAM
-AND user.user_since < 
+from ChirpMessages cm where 
+cm.send_time >=
+DATETIME(
 @PARAM
-AND msg.send_time >=
+)
+AND cm.send_time <
+DATETIME(
 @PARAM
-AND msg.send_time <
-@PARAM
-GROUP BY user.id;
+)
 ;

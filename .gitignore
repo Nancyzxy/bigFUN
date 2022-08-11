@@ -7,8 +7,11 @@ tmp/
 *~.nib
 local.properties
 .settings/
-.idea/
 .loadpath
+target/
+.idea/
+conf/asterixdb/bigfun-conf.json
+conf/asterixdb/stats.csv
 
 # Eclipse Core
 .project
@@ -49,13 +52,3 @@ target
 
 # Code Recommenders
 .recommenders/
-
-#IDEA
-*.iml
-
-*.dump
-*.csv
-*.params
-*.index
-workload
-

@@ -1,0 +1,6 @@
+select cm from ChirpMessages cm
+where edit_distance_contains(cm.message_text, 
+@PARAM
+,1)[0] order by cm.send_time desc
+limit 10
+;

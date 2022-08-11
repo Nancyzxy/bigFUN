@@ -1,19 +1,19 @@
 SELECT user.id AS id, COUNT(*) AS count
 FROM GleambookUsers user, GleambookMessages msg
-WHERE msg.author_id = user.id
-AND user.user_since >= 
-DATETIME(
-@PARAM
-)
-AND user.user_since < 
-DATETIME(
-@PARAM
-)
+WHERE msg.author_id /*+ indexnl */ = user.id
 AND msg.send_time >=
 DATETIME(
 @PARAM
 )
 AND msg.send_time <
+DATETIME(
+@PARAM
+)
+AND user.user_since >= 
+DATETIME(
+@PARAM
+)
+AND user.user_since < 
 DATETIME(
 @PARAM
 )

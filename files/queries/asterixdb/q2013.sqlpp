@@ -1,0 +1,20 @@
+select gbu.name,
+(select value gbm.message from GleambookMessages gbm 
+where gbm.send_time >= 
+DATETIME(
+@PARAM
+)
+and gbm.send_time < 
+DATETIME(
+@PARAM
+)
+and gbm.author_id /*+ indexnl */= gbu.id) as messages from GleambookUsers gbu 
+where gbu.user_since >= 
+DATETIME(
+@PARAM
+)
+and gbu.user_since <
+DATETIME(
+@PARAM
+)
+;

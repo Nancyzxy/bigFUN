@@ -36,11 +36,11 @@ public class ClientConfig extends AbstractClientConfig {
         String dvName = (String) getParamValue(Constants.ASTX_DV_NAME);
         int iter = (int) getParamValue(Constants.ITERATIONS);
 
-        String qIxFile = (String) getParamValue(Constants.QUERY_INDEX_PATH);
-        String qGenConfigFile = (String) getParamValue(Constants.QUERY_PARAMS);
-        String workloadFile = (String) getParamValue(Constants.WORKLOAD_PATH);
+        String qIxFile = bigFunHomePath+"/"+(String) getParamValue(Constants.QUERY_INDEX_PATH);
+        String qGenConfigFile = bigFunHomePath+"/"+(String) getParamValue(Constants.QUERY_PARAMS);
+        String workloadFile = bigFunHomePath+"/"+(String) getParamValue(Constants.WORKLOAD_PATH);
 
-        String statsFile = (String) getParamValue(Constants.STATS_FILE);
+        String statsFile = bigFunHomePath+"/"+(String) getParamValue(Constants.STATS_FILE);
 
         long seed = Constants.DEFAULT_SEED;
         if (isParamSet(Constants.SEED)) {
@@ -55,7 +55,6 @@ public class ClientConfig extends AbstractClientConfig {
             }
 
         }
-
         long maxUserId = Constants.DEFAULT_MAX_GBOOK_USR_ID;
         if (isParamSet(Constants.MAX_GBOOK_USR_ID)) {
             Object value = getParamValue(Constants.MAX_GBOOK_USR_ID);
@@ -83,7 +82,7 @@ public class ClientConfig extends AbstractClientConfig {
         String resultsFile = null;
         if (isParamSet(Constants.ASTX_DUMP_RESULTS)) {
             dumpResults = (boolean) getParamValue(Constants.ASTX_DUMP_RESULTS);
-            resultsFile = (String) getParamValue(Constants.RESULTS_DUMP_FILE);
+            resultsFile = bigFunHomePath+"/"+(String) getParamValue(Constants.RESULTS_DUMP_FILE);
         }
 
         AsterixClientReadOnlyWorkload rClient = new AsterixClientReadOnlyWorkload(cc, port, httpUser, httpPassword,

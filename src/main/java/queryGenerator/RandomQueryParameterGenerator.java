@@ -54,7 +54,7 @@ public class RandomQueryParameterGenerator {
     public List<IArgument> nextQuery(int qIx, int vIx) {
         args.clear();
         switch (qIx) {
-            case 100: //PK lookup
+            case 100:
                 nextQ100();
                 break;
             case 101: //PK lookup
@@ -79,13 +79,11 @@ public class RandomQueryParameterGenerator {
                 nextQ107(qIx, vIx);
                 break;
             case 108: //top-k
-            case 109: //top-k
-            case 119: //top-k
                 nextQ108(qIx, vIx);
                 break;
-            case 110:
-            case 111:
-                 break;
+            case 109: //spatial selection
+                nextQ109(vIx);
+                break;
             case 1010: //exact text search
                 nextQ1010(vIx);
                 break;
@@ -106,13 +104,16 @@ public class RandomQueryParameterGenerator {
                 break;
             case 1015: //join and top-k
             case 2015: //IX-join and top-k
-                nextQ1014(qIx, vIx);
+                nextQ1015(qIx, vIx);
                 break;
             case 1016: //spatial Join
-                nextQ1014(qIx, vIx);
+                nextQ1016(qIx, vIx);
                 break;
-            case 1017: //spatial Join
-                nextQ1014(qIx, vIx);
+            case 1017:
+                nextQ1017(qIx,vIx);
+                break;
+            case 1018:
+                nextQ1018(qIx, vIx);
                 break;
             default:
                 return null;
@@ -128,6 +129,23 @@ public class RandomQueryParameterGenerator {
         args.add(k);
     }
 
+    private void nextQ1017(int qid,int vid) {
+        LongArgument k = new LongArgument(randomLongArg(Constants.SENTIMENT_RANGE).getValue()-1);
+        DateTimeArgument s = randomDateTime(START_DATE, END_DATE);
+        ArrayList<Integer> p = qps.getParam(qid, vid);
+        DateTimeArgument e = shift(s, p.get(0));
+        args.add(k);
+        args.add(s);
+        args.add(e);
+    }
+
+    private void nextQ1018(int qid,int vid) {
+        DateTimeArgument s = randomDateTime(START_DATE, END_DATE);
+        ArrayList<Integer> p = qps.getParam(qid, vid);
+        DateTimeArgument e = shift(s, p.get(0));
+        args.add(s);
+        args.add(e);
+    }
     private void nextQ102(int qid, int vid) {
         int len = qps.getParam(qid, vid).get(0);
         LongArgument s = randomLongArg(MAX_FB_USR_ID - len);
@@ -189,7 +207,14 @@ public class RandomQueryParameterGenerator {
         DoubleArgument radius = getRadius(vid);
         args.add(new DoubleArgument(location[0]));
         args.add(new DoubleArgument(location[1]));
-        args.add(radius);
+        args.add(new DoubleArgument(location[0]+radius.getValue()));
+        args.add(new DoubleArgument(location[1]));
+        args.add(new DoubleArgument(location[0]+radius.getValue()));
+        args.add(new DoubleArgument(location[1]+radius.getValue()));
+        args.add(new DoubleArgument(location[0]));
+        args.add(new DoubleArgument(location[1]+radius.getValue()));
+        args.add(new DoubleArgument(location[0]));
+        args.add(new DoubleArgument(location[1]));
     }
 
     private void nextQ1010(int vid) {
@@ -255,9 +280,12 @@ public class RandomQueryParameterGenerator {
         int shift = qps.getParam(qid, vid).get(0);
         DateTimeArgument e = shift(s, shift);
         DoubleArgument r = getRadius(vid);
+        args.add(r);
+        args.add(r);
+        args.add(r);
+        args.add(r);
         args.add(s);
         args.add(e);
-        args.add(r);
     }
 
     //Utility Methods
