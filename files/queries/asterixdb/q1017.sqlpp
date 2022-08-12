@@ -1,5 +1,4 @@
-select sentiment(cm.message_text)= 
-@PARAM
+select sentiment(cm.message_text)
 from ChirpMessages cm where 
 cm.send_time >=
 DATETIME(

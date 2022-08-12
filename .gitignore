@@ -12,7 +12,7 @@ target/
 .idea/
 conf/asterixdb/bigfun-conf.json
 conf/asterixdb/stats.csv
-
+conf/asterixdb/res.res
 # Eclipse Core
 .project
 

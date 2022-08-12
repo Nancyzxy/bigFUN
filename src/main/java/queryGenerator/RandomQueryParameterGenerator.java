@@ -130,11 +130,9 @@ public class RandomQueryParameterGenerator {
     }
 
     private void nextQ1017(int qid,int vid) {
-        LongArgument k = new LongArgument(randomLongArg(Constants.SENTIMENT_RANGE).getValue()-1);
         DateTimeArgument s = randomDateTime(START_DATE, END_DATE);
         ArrayList<Integer> p = qps.getParam(qid, vid);
         DateTimeArgument e = shift(s, p.get(0));
-        args.add(k);
         args.add(s);
         args.add(e);
     }
