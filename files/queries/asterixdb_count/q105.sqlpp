@@ -1,0 +1,14 @@
+WITH myquery AS (
+SELECT VALUE gbu
+FROM GleambookUsers gbu
+WHERE (EVERY e IN gbu.employment SATISFIES e.end_date IS NOT UNKNOWN)
+AND gbu.user_since >= 
+DATETIME(
+@PARAM
+)
+AND gbu.user_since <= 
+DATETIME(
+@PARAM
+)
+) SELECT COUNT(*) FROM myquery
+;

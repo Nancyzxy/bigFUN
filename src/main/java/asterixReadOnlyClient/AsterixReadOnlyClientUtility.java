@@ -115,6 +115,7 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             ObjectNode content = om.createObjectNode();
                 content.put("statement", (String) qBody);
                 content.put("timeout","20m");
+                content.put("mode", "deferred");
             try {
                 builder.setEntity(
                         new StringEntity(om.writeValueAsString(content),
@@ -128,10 +129,10 @@ public class AsterixReadOnlyClientUtility extends AbstractReadOnlyClientUtility 
             method.setHeader("Accept", "application/json");
             HttpResponse response = executeHttpRequest(method,
                     credentialsProvider);
-            // StringWriter resultWriter = new StringWriter();
-            // IOUtils.copy(response.getEntity().getContent(),resultWriter,StandardCharsets
-            //         .UTF_8);
-            // result = resultWriter.toString();
+            StringWriter resultWriter = new StringWriter();
+            IOUtils.copy(response.getEntity().getContent(),resultWriter,StandardCharsets
+                    .UTF_8);
+            result = resultWriter.toString();
             long e = System.currentTimeMillis();
 
             rspTime = (e - s);

@@ -1,0 +1,8 @@
+WITH myquery AS (
+SELECT VALUE user
+FROM GleambookUsers user
+WHERE user.id >= 
+@PARAM
+AND user.id <= 
+@PARAM
+) SELECT COUNT(*) FROM myquery;

@@ -1,0 +1,12 @@
+WITH myquery AS (
+SELECT VALUE user
+FROM GleambookUsers user
+WHERE user.user_since >= 
+DATETIME(
+@PARAM
+)
+AND user.user_since <= 
+DATETIME(
+@PARAM
+)
+) SELECT COUNT(*) FROM myquery;

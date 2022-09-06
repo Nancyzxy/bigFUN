@@ -1,0 +1,27 @@
+from ChirpMessages cm1
+let ev = st_make_envelope(
+st_x(cm1.sender_location)-
+@PARAM
+, 
+st_y(cm1.sender_location)-
+@PARAM
+, 
+st_x(cm1.sender_location)+
+@PARAM
+, 
+st_y(cm1.sender_location)+
+@PARAM
+, 4326)
+WHERE
+cm1.send_time >DATETIME(
+@PARAM
+)
+AND
+cm1.send_time <=DATETIME(
+@PARAM
+ )
+SELECT cm1,(select cm2
+from ChirpMessages cm2 
+where cm1.chirpid /*+ indexnl */!=cm2.chirpid and st_contains(ev, cm2.sender_location)order by cm2.sender_time limit 10 
+)
+;

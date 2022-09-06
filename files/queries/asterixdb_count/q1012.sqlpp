@@ -1,5 +1,6 @@
+WITH myquery AS (
 select  gbm.message , gbu.name from GleambookMessages gbm,GleambookUsers gbu
-where gbm.author_id /*+ indexnl */ = gbu.id and
+where gbm.author_id = gbu.id and
 gbu.user_since >= 
 DATETIME(
 @PARAM
@@ -19,4 +20,4 @@ gbm.send_time <
 DATETIME(
 @PARAM
 )
-;
+) SELECT COUNT(*) FROM myquery;

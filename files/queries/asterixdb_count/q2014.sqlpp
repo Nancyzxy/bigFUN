@@ -1,3 +1,4 @@
+WITH myquery AS (
 SELECT user.id AS id, COUNT(*) AS count
 FROM GleambookUsers user, GleambookMessages msg
 WHERE msg.author_id /*+ indexnl */ = user.id
@@ -18,6 +19,4 @@ DATETIME(
 @PARAM
 )
 GROUP BY user.id
-ORDER BY count DESC
-LIMIT 10
-;
+) SELECT COUNT(*) FROM myquery;

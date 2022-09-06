@@ -1,0 +1,12 @@
+WITH myquery AS (
+SELECT uname, a
+FROM ChirpMessages cm
+WHERE cm.send_time >=
+DATETIME(
+@PARAM
+)
+AND cm.send_time <
+DATETIME(
+@PARAM
+)
+GROUP BY cm.user.screen_name AS uname WITH a AS AVG(LENGTH(cm.message_text))) SELECT COUNT(*) FROM myquery

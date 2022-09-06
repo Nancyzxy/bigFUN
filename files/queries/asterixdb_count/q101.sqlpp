@@ -1,0 +1,5 @@
+WITH myquery AS (
+SELECT VALUE user from GleambookUsers user 
+where user.id = 
+@PARAM
+) SELECT COUNT(*) FROM myquery

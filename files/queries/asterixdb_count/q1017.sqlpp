@@ -1,0 +1,12 @@
+WITH myquery AS (
+select sentiment(cm.message_text)
+from ChirpMessages cm where 
+cm.send_time >=
+DATETIME(
+@PARAM
+)
+AND cm.send_time <
+DATETIME(
+@PARAM
+)
+) SELECT COUNT(*) FROM myquery;
